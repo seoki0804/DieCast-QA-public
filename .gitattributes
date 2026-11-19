@@ -1,0 +1,10 @@
+* text=auto
+
+# 원본·정제 데이터는 바이트 그대로 보존 (줄바꿈 변환 금지)
+*.csv -text
+*.docx binary
+*.joblib binary
+*.pdf binary
+*.aasx binary
+*.otf binary
+*.ico binary

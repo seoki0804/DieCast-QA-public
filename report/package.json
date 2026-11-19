@@ -1,0 +1,19 @@
+{
+  "name": "diecast-qa-report",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DieCast-QA 최종 보고서(.docx·.pdf) 생성: 결과 CSV·그림을 읽어 docs/report/에 쓴다",
+  "scripts": {
+    "build": "node build_report.mjs",
+    "pdf": "node render_pdf.mjs",
+    "all": "npm run build && npm run pdf && npm run build && npm run pdf",
+    "slides": "node build_slides.mjs",
+    "proposal": "node build_proposal.mjs",
+    "proposal:v4": "node build_proposal_v4.mjs"
+  },
+  "dependencies": {
+    "docx": "9.15.4",
+    "pptxgenjs": "4.0.1"
+  }
+}

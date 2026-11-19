@@ -1,0 +1,7 @@
+,Product_Type,chart,variable,statistic,center,lcl,ucl,subgroup_size,sigma,target,params
+0,1,p,defect,p,0.116604,0.0203195,0.212888,100,,,50 shot
+1,1,ewma,defect_rate,ewma,0.116472,0.00750498,0.225439,1,0.226833,0.116472,"lambda=0.05, L=3.0, sigma=binomial"
+2,1,cusum,defect_rate,cusum,0,-8,8,1,0.226833,0.116472,"k=0.25, h=8.0, sigma=binomial, reset=True"
+3,2,p,defect,p,0.133846,0.0317001,0.235992,100,,,50 shot
+4,2,ewma,defect_rate,ewma,0.13391,0.0182293,0.249592,1,0.240809,0.13391,"lambda=0.05, L=3.0, sigma=binomial"
+5,2,cusum,defect_rate,cusum,0,-8,8,1,0.240809,0.13391,"k=0.25, h=8.0, sigma=binomial, reset=True"

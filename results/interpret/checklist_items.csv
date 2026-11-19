@@ -1,0 +1,16 @@
+type5,rank,type_label,variable,label,category,direction,effect,runs,runs_agree,type_shap_share,check_point
+short_shot,1,미성형,Melting_Furnace_Temp,용탕 온도,재료,낮음,-0.121379,4,4,0.0657965,용해로·용탕 온도
+short_shot,2,미성형,Clamping_Force,형체력,설비,높음,0.117607,4,3,0.0652672,형체력·금형 체결 상태
+short_shot,3,미성형,Coolant_Temp,냉각수 온도,금형,낮음,-0.108545,4,4,0.0569187,금형 냉각수 온도
+exfoliation,1,박리,Coolant_Temp,냉각수 온도,금형,낮음,-0.30957,2,2,0.0498709,금형 냉각수 온도
+exfoliation,2,박리,Biscuit_Thickness,비스킷 두께,설비,낮음,-0.182536,2,2,0.0169359,용탕 주입량(비스킷 두께)
+exfoliation,3,박리,Air_Pressure,공기압,설비,높음,0.119337,2,2,0.0293497,공압 공급 압력
+porosity,1,기공,Air_Pressure,공기압,설비,높음,0.211657,4,4,0.0353237,공압 공급 압력
+porosity,2,기공,Spray_Time,스프레이 시간,방법,높음,0.140137,4,4,0.0463867,이형제 스프레이 시간·도포량
+porosity,3,기공,Cycle_Time,사이클 타임,설비,높음,0.119635,4,3,0.0567567,설비 대기·정지 여부(사이클 지연)
+deformation,1,변형,Melting_Furnace_Temp,용탕 온도,재료,낮음,-0.204994,1,1,0.0457061,용해로·용탕 온도
+deformation,2,변형,Velocity_2,2단 사출 속도,설비,낮음,-0.162351,1,1,0.0131706,2단 사출 속도 설정
+deformation,3,변형,Spray_1_Time,스프레이 1 시간,방법,높음,0.122551,1,1,0.0589515,이형제 스프레이 1 시간
+other,1,기타,Melting_Furnace_Temp,용탕 온도,재료,낮음,-0.248625,2,2,0.0484721,용해로·용탕 온도
+other,2,기타,Spray_Time,스프레이 시간,방법,높음,0.171524,2,1,0.0437531,이형제 스프레이 시간·도포량
+other,3,기타,Air_Pressure,공기압,설비,높음,0.131933,2,1,0.0163018,공압 공급 압력

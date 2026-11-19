@@ -1,0 +1,22 @@
+# e81_synthetic
+
+- 증강 없음: ① 0.756 / 51% / Recall 12%, ② 0.569 / 29% / Recall 8%
+- Class Weight: ① 0.758 / 50% / Recall 32%, ② 0.590 / 30% / Recall 14%
+- Random Oversampling: ① 0.751 / 49% / Recall 24%, ② 0.586 / 28% / Recall 7%
+- SMOTE: ① 0.752 / 50% / Recall 23%, ② 0.565 / 28% / Recall 12%
+- Borderline-SMOTE: ① 0.755 / 50% / Recall 22%, ② 0.564 / 27% / Recall 10%
+- ADASYN: ① 0.750 / 50% / Recall 22%, ② 0.572 / 28% / Recall 12%
+- Noise jitter (5%): ① 0.752 / 50% / Recall 11%, ② 0.494 / 18% / Recall 16%
+- Gaussian Copula: ① 0.747 / 49% / Recall 20%, ② 0.432 / 12% / Recall 80%
+- CTGAN: ① 0.749 / 50% / Recall 12%, ② 0.481 / 15% / Recall 22%
+- 원인 진단 ② 잡음: shot 번호에만: 0.570 / 28% / Recall 13%
+- 원인 진단 ② 잡음: 공정 변수에만: 0.475 / 15% / Recall 23%
+- 원인 진단 ② Copula + 실제 값으로 맞춤: 0.430 / 13% / Recall 78%
+- 2단계 Macro-F1 증강 없음: ① 0.566 / ② 0.293
+- 2단계 Macro-F1 SMOTE: ① 0.589 / ② 0.318
+- 2단계 Macro-F1 Gaussian Copula: ① 0.577 / ② 0.272
+- 2단계 Macro-F1 CTGAN: ① 0.571 / ② 0.296
+- 합성 품질 Gaussian Copula: TSTR 0.641 (실제 학습 0.756), 진짜/가짜 판별 AUC 1.00, 최근접 거리 비 3.08
+- 합성 품질 CTGAN: TSTR 0.494 (실제 학습 0.756), 진짜/가짜 판별 AUC 1.00, 최근접 거리 비 5.18
+- 합성 품질 Noise jitter (5%): TSTR 0.497 (실제 학습 0.756), 진짜/가짜 판별 AUC 1.00, 최근접 거리 비 0.25
+- 합성 품질 SMOTE: TSTR 0.741 (실제 학습 0.756), 진짜/가짜 판별 AUC 0.92, 최근접 거리 비 0.53

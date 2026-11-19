@@ -1,0 +1,22 @@
+variable,label,share,dropped
+Coolant_Pressure,냉각수 압력,0.913631,True
+Factory_Humidity,공장 습도,0.83818,True
+Factory_Temp,공장 온도,0.773713,True
+Spray_2_Time,스프레이 2 시간,0.705139,True
+Casting_Pressure,주조 압력,0.69986,True
+Cylinder_Pressure,실린더 압력,0.69554,True
+Spray_Time,스프레이 시간,0.556938,True
+High_Velocity,고속 사출 속도,0.495322,False
+Clamping_Force,형체력,0.444186,False
+Spray_1_Time,스프레이 1 시간,0.422655,False
+Pressure_Rise_Time,증압 상승 시간,0.374437,False
+Coolant_Temp,냉각수 온도,0.240767,False
+Melting_Furnace_Temp,용탕 온도,0.088144,False
+Velocity_2,2단 사출 속도,0.0880564,False
+Shot,shot 순번,0.0836777,False
+Velocity_3,3단 사출 속도,0.077313,False
+Velocity_1,1단 사출 속도,0.0431605,False
+Air_Pressure,공기압,0.0339259,False
+Rapid_Rise_Time,고속 상승 시간,0.0328649,False
+Biscuit_Thickness,비스킷 두께,0.0292418,False
+Cycle_Time,사이클 타임,0.0250599,False

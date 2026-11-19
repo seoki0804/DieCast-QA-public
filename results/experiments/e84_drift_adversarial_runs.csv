@@ -1,0 +1,5 @@
+pair,adversarial_auc,adversarial_auc_process,top1,top2,top3
+1→2,1,0.991415,Factory_Humidity,Factory_Temp,Coolant_Pressure
+2→3,1,0.999945,Coolant_Pressure,Spray_2_Time,Casting_Pressure
+4→5,1,1,Factory_Humidity,High_Velocity,Factory_Temp
+5→7,1,0.942069,Coolant_Pressure,Factory_Humidity,Coolant_Temp

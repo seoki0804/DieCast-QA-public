@@ -1,0 +1,57 @@
+ratio,strategy,cavities_mode,threshold_median,never_inspect_share,plan_mode
+1,cavity,-,,,
+1,model,,,1,
+1,rule,,,1,
+1,rule_censored,,,1,
+1,sampling,,,,"n=5, c=4"
+1,sampling_classical,,,,"n=55, c=9"
+1,switching,,,1,
+2,cavity,-,,,
+2,model,,0.62333,0.169014,
+2,rule,,0.8,0.380282,
+2,rule_censored,,0.8,0.380282,
+2,sampling,,,,"n=5, c=4"
+2,sampling_classical,,,,"n=55, c=9"
+2,switching,,0.62333,0.169014,
+3,cavity,-,,,
+3,model,,0.46333,0.0140845,
+3,rule,,0.5,0.0422535,
+3,rule_censored,,0.5,0.0422535,
+3,sampling,,,,"n=5, c=4"
+3,sampling_classical,,,,"n=55, c=9"
+3,switching,,0.46333,0.0140845,
+5,cavity,1,,,
+5,model,,0.26667,0,
+5,rule,,0.33333,0.0422535,
+5,rule_censored,,0.33333,0.0422535,
+5,sampling,,,,"n=5, c=2"
+5,sampling_classical,,,,"n=55, c=9"
+5,switching,,0.26667,0,
+8,cavity,1,,,
+8,model,,0.16,0,
+8,rule,,0.10243,0.0422535,
+8,rule_censored,,0.10243,0.0422535,
+8,sampling,,,,"n=30, c=3"
+8,sampling_classical,,,,"n=55, c=9"
+8,switching,,0.16,0,
+10,cavity,1,,,
+10,model,,0.06333,0,
+10,rule,,0.1,0.0140845,
+10,rule_censored,,0.1,0.0140845,
+10,sampling,,,,"n=30, c=1"
+10,sampling_classical,,,,"n=55, c=9"
+10,switching,,0.06333,0,
+15,cavity,1+2,,,
+15,model,,0.03,0,
+15,rule,,0.1,0,
+15,rule_censored,,0.1,0,
+15,sampling,,,,"n=50, c=1"
+15,sampling_classical,,,,"n=55, c=9"
+15,switching,,0.03,0,
+20,cavity,1+2,,,
+20,model,,0.02,0,
+20,rule,,0,0,
+20,rule_censored,,0,0,
+20,sampling,,,,"n=50, c=1"
+20,sampling_classical,,,,"n=55, c=9"
+20,switching,,0.02,0,

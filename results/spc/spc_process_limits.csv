@@ -1,0 +1,65 @@
+,Product_Type,chart,variable,statistic,center,lcl,ucl,subgroup_size,sigma,target,params
+0,1,xbar_r,Casting_Pressure,xbar,1060.8,1051.49,1070.11,5,6.93657,,
+1,1,xbar_r,Casting_Pressure,r,16.1345,0,34.1083,5,6.93657,,
+2,1,ewma,Casting_Pressure,ewma,1060.77,1051.21,1070.34,1,9.56494,1060.77,"lambda=0.2, L=3.0, sigma=moving_range"
+3,1,cusum,Casting_Pressure,cusum,0,-5,5,1,9.56494,1060.77,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+4,1,xbar_r,High_Velocity,xbar,2.13771,2.11473,2.1607,5,0.0171244,,
+5,1,xbar_r,High_Velocity,r,0.0398314,0,0.0842037,5,0.0171244,,
+6,1,ewma,High_Velocity,ewma,2.13774,2.12201,2.15347,1,0.015731,2.13774,"lambda=0.2, L=3.0, sigma=moving_range"
+7,1,cusum,High_Velocity,cusum,0,-5,5,1,0.015731,2.13774,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+8,1,xbar_r,Cylinder_Pressure,xbar,219.172,217.176,221.169,5,1.48763,,
+9,1,xbar_r,Cylinder_Pressure,r,3.46023,0,7.31492,5,1.48763,,
+10,1,ewma,Cylinder_Pressure,ewma,219.167,217.132,221.202,1,2.03502,219.167,"lambda=0.2, L=3.0, sigma=moving_range"
+11,1,cusum,Cylinder_Pressure,cusum,0,-5,5,1,2.03502,219.167,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+12,1,xbar_r,Biscuit_Thickness,xbar,11.6545,10.9584,12.3507,5,0.518676,,
+13,1,xbar_r,Biscuit_Thickness,r,1.20644,0,2.55041,5,0.518676,,
+14,1,ewma,Biscuit_Thickness,ewma,11.6572,11.201,12.1134,1,0.456176,11.6572,"lambda=0.2, L=3.0, sigma=moving_range"
+15,1,cusum,Biscuit_Thickness,cusum,0,-5,5,1,0.456176,11.6572,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+16,1,xbar_r,Melting_Furnace_Temp,xbar,699.946,698.938,700.954,5,0.751062,,
+17,1,xbar_r,Melting_Furnace_Temp,r,1.74697,0,3.69309,5,0.751062,,
+18,1,ewma,Melting_Furnace_Temp,ewma,699.926,699.516,700.335,1,0.409452,699.926,"lambda=0.2, L=3.0, sigma=moving_range"
+19,1,cusum,Melting_Furnace_Temp,cusum,0,-5,5,1,0.409452,699.926,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+20,1,xbar_r,Cycle_Time,xbar,21.0867,20.9956,21.1778,5,0.0679082,,
+21,1,xbar_r,Cycle_Time,r,0.157955,0,0.333916,5,0.0679082,,
+22,1,ewma,Cycle_Time,ewma,21.0866,21.0257,21.1476,1,0.0609465,21.0866,"lambda=0.2, L=3.0, sigma=moving_range"
+23,1,cusum,Cycle_Time,cusum,0,-5,5,1,0.0609465,21.0866,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+24,1,xbar_r,Air_Pressure,xbar,6.13167,6.0956,6.16773,5,0.0268702,,
+25,1,xbar_r,Air_Pressure,r,0.0625,0,0.132125,5,0.0268702,,
+26,1,ewma,Air_Pressure,ewma,6.13103,6.11587,6.14619,1,0.0151612,6.13103,"lambda=0.2, L=3.0, sigma=moving_range"
+27,1,cusum,Air_Pressure,cusum,0,-5,5,1,0.0151612,6.13103,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+28,1,xbar_r,Spray_1_Time,xbar,0.933371,0.932169,0.934573,5,0.000895672,,
+29,1,xbar_r,Spray_1_Time,r,0.00208333,0,0.00440417,5,0.000895672,,
+30,1,ewma,Spray_1_Time,ewma,0.933296,0.932658,0.933933,1,0.000637305,0.933296,"lambda=0.2, L=3.0, sigma=moving_range"
+31,1,cusum,Spray_1_Time,cusum,0,-5,5,1,0.000637305,0.933296,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+32,2,xbar_r,Casting_Pressure,xbar,595.351,594.532,596.17,5,0.610248,,
+33,2,xbar_r,Casting_Pressure,r,1.41944,0,3.00069,5,0.610248,,
+34,2,ewma,Casting_Pressure,ewma,595.353,594.809,595.896,1,0.5435,595.353,"lambda=0.2, L=3.0, sigma=moving_range"
+35,2,cusum,Casting_Pressure,cusum,0,-5,5,1,0.5435,595.353,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+36,2,xbar_r,High_Velocity,xbar,2.57644,2.56018,2.5927,5,0.0121137,,
+37,2,xbar_r,High_Velocity,r,0.0281765,0,0.0595651,5,0.0121137,,
+38,2,ewma,High_Velocity,ewma,2.57624,2.56477,2.58771,1,0.0114714,2.57624,"lambda=0.2, L=3.0, sigma=moving_range"
+39,2,cusum,High_Velocity,cusum,0,-5,5,1,0.0114714,2.57624,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+40,2,xbar_r,Cylinder_Pressure,xbar,264.714,264.345,265.083,5,0.274887,,
+41,2,xbar_r,Cylinder_Pressure,r,0.639386,0,1.35166,5,0.274887,,
+42,2,ewma,Cylinder_Pressure,ewma,264.715,264.477,264.953,1,0.238036,264.715,"lambda=0.2, L=3.0, sigma=moving_range"
+43,2,cusum,Cylinder_Pressure,cusum,0,-5,5,1,0.238036,264.715,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+44,2,xbar_r,Biscuit_Thickness,xbar,17.5381,16.4815,18.5947,5,0.787275,,
+45,2,xbar_r,Biscuit_Thickness,r,1.8312,0,3.87116,5,0.787275,,
+46,2,ewma,Biscuit_Thickness,ewma,17.5369,16.8676,18.2062,1,0.669306,17.5369,"lambda=0.2, L=3.0, sigma=moving_range"
+47,2,cusum,Biscuit_Thickness,cusum,0,-5,5,1,0.669306,17.5369,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+48,2,xbar_r,Melting_Furnace_Temp,xbar,655.639,654.917,656.361,5,0.537898,,
+49,2,xbar_r,Melting_Furnace_Temp,r,1.25115,0,2.64493,5,0.537898,,
+50,2,ewma,Melting_Furnace_Temp,ewma,655.658,655.382,655.933,1,0.27537,655.658,"lambda=0.2, L=3.0, sigma=moving_range"
+51,2,cusum,Melting_Furnace_Temp,cusum,0,-5,5,1,0.27537,655.658,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+52,2,xbar_r,Cycle_Time,xbar,35.4613,35.3298,35.5928,5,0.0979696,,
+53,2,xbar_r,Cycle_Time,r,0.227877,0,0.481732,5,0.0979696,,
+54,2,ewma,Cycle_Time,ewma,35.4629,35.3814,35.5443,1,0.0814571,35.4629,"lambda=0.2, L=3.0, sigma=moving_range"
+55,2,cusum,Cycle_Time,cusum,0,-5,5,1,0.0814571,35.4629,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+56,2,xbar_r,Air_Pressure,xbar,6.14363,6.08298,6.20428,5,0.0451914,,
+57,2,xbar_r,Air_Pressure,r,0.105115,0,0.222213,5,0.0451914,,
+58,2,ewma,Air_Pressure,ewma,6.13968,6.11068,6.16869,1,0.0290078,6.13968,"lambda=0.2, L=3.0, sigma=moving_range"
+59,2,cusum,Air_Pressure,cusum,0,-5,5,1,0.0290078,6.13968,"k=0.5, h=5.0, sigma=moving_range, reset=True"
+60,2,xbar_r,Spray_1_Time,xbar,2.02281,2.02089,2.02473,5,0.00142941,,
+61,2,xbar_r,Spray_1_Time,r,0.00332481,0,0.00702864,5,0.00142941,,
+62,2,ewma,Spray_1_Time,ewma,2.02272,2.02191,2.02353,1,0.000814571,2.02272,"lambda=0.2, L=3.0, sigma=moving_range"
+63,2,cusum,Spray_1_Time,cusum,0,-5,5,1,0.000814571,2.02272,"k=0.5, h=5.0, sigma=moving_range, reset=True"

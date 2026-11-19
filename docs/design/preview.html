@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DieCast-QA 디자인 미리보기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+/* tokens.json의 의미 토큰 (10단계 기획안) */
+:root, :root[data-theme="light"] {
+  --bg-page: #f9f9f7; --bg-surface: #fcfcfb; --bg-raised: #ffffff; --bg-subtle: #f0efec;
+  --bg-hover: rgba(11,11,11,.04); --bg-selected: rgba(42,120,214,.10);
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781; --text-success: #006300;
+  --border-hairline: rgba(11,11,11,.10); --border-strong: #c3c2b7;
+  --accent: #256abf; --accent-hover: #1c5cab; --accent-text: #256abf; --accent-subtle: #cde2fb; --focus: #2a78d6;
+  --chart-grid: #e1e0d9; --chart-baseline: #c3c2b7; --chart-band: rgba(42,120,214,.10); --chart-ref: #898781;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4;
+  --div-pos: #e34948; --div-neg: #3987e5;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg-page: #0d0d0d; --bg-surface: #1a1a19; --bg-raised: #232321; --bg-subtle: #2c2c2a;
+  --bg-hover: rgba(255,255,255,.05); --bg-selected: rgba(57,135,229,.18);
+  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781; --text-success: #0ca30c;
+  --border-hairline: rgba(255,255,255,.10); --border-strong: #383835;
+  --accent: #256abf; --accent-hover: #1c5cab; --accent-text: #6da7ec; --accent-subtle: #184f95; --focus: #6da7ec;
+  --chart-grid: #2c2c2a; --chart-baseline: #383835; --chart-band: rgba(57,135,229,.16); --chart-ref: #898781;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181;
+  --div-pos: #e66767; --div-neg: #3987e5;
+  color-scheme: dark;
+}
+:root {
+  --critical: #d03b3b; --warning: #fab219; --serious: #ec835a; --good: #0ca30c;
+  --font: 'Pretendard Variable', Pretendard, -apple-system, 'Malgun Gothic', system-ui, sans-serif;
+  --r-sm: 4px; --r-md: 8px; --r-lg: 12px;
+  --shadow-toast: 0 8px 24px rgba(0,0,0,.14);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg-page); color: var(--text-primary); font: 400 14px/20px var(--font);
+  font-variant-numeric: tabular-nums; }
+main { max-width: 1440px; margin: 0 auto; padding: 24px; }
+h1 { font-size: 24px; line-height: 32px; margin: 0; }
+h2 { font-size: 18px; line-height: 26px; margin: 40px 0 12px; }
+h3 { font-size: 15px; line-height: 22px; margin: 0 0 8px; font-weight: 600; }
+p.note { color: var(--text-secondary); margin: 4px 0 0; }
+.muted { color: var(--text-muted); font-size: 12px; line-height: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+.card { background: var(--bg-surface); border: 1px solid var(--border-hairline); border-radius: var(--r-lg); padding: 16px; }
+.head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+button, .seg button { font: inherit; }
+/* swatch */
+.sw { width: 168px; } .sw i { display: block; height: 48px; border-radius: var(--r-md); border: 1px solid var(--border-hairline); }
+.sw b { display: block; font-size: 13px; margin-top: 6px; } .sw span { font-size: 12px; color: var(--text-muted); }
+/* type */
+.type div { display: flex; gap: 16px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--border-hairline); }
+.type code { width: 150px; color: var(--text-muted); font-size: 12px; flex: none; }
+/* buttons */
+.btn { border: 1px solid transparent; border-radius: var(--r-md); padding: 8px 14px; cursor: pointer; font-weight: 600; }
+.btn-primary { background: var(--accent); color: #fff; } .btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary { background: var(--bg-raised); color: var(--text-primary); border-color: var(--border-strong); }
+.btn-ghost { background: transparent; color: var(--accent-text); }
+.btn-danger { background: var(--critical); color: #fff; }
+.btn:focus-visible, .seg button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.seg { display: inline-flex; background: var(--bg-subtle); border-radius: var(--r-md); padding: 2px; }
+.seg button { border: 0; background: transparent; color: var(--text-secondary); padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--bg-raised); color: var(--text-primary); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+/* badges */
+.badge { display: inline-flex; align-items: center; gap: 4px; border-radius: var(--r-sm); padding: 2px 8px; font-size: 13px; font-weight: 600; line-height: 18px; }
+.badge svg { width: 14px; height: 14px; }
+.b-critical { background: var(--critical); color: #fff; } .b-warning { background: var(--warning); color: #0b0b0b; }
+.b-info { background: var(--text-secondary); color: var(--bg-surface); } .b-log { border: 1px solid var(--border-strong); color: var(--text-muted); }
+.b-resolved { background: var(--good); color: #fff; }
+.r-high { background: var(--serious); color: #0b0b0b; } .r-mid { border: 1px solid var(--text-secondary); color: var(--text-secondary); }
+.r-low { color: var(--text-muted); border: 1px solid var(--border-hairline); }
+.dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+/* KPI */
+.kpi { width: 220px; } .kpi .v { font-size: 32px; line-height: 40px; font-weight: 700; }
+.kpi .ctx { font-size: 13px; color: var(--text-secondary); } .kpi.alarm { border-color: var(--critical); box-shadow: inset 3px 0 0 var(--critical); }
+/* banner / toast */
+.banner { display: flex; align-items: center; gap: 12px; background: var(--bg-raised); border: 1px solid var(--critical);
+  border-left: 6px solid var(--critical); border-radius: var(--r-md); padding: 10px 14px; }
+.banner .msg { flex: 1; } .toast { width: 340px; background: var(--bg-raised); border-radius: var(--r-md); box-shadow: var(--shadow-toast);
+  padding: 12px 14px; border: 1px solid var(--border-hairline); }
+/* table */
+table { border-collapse: collapse; width: 100%; } th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border-hairline); }
+th { font-weight: 600; font-size: 13px; color: var(--text-secondary); } td.num { text-align: right; }
+tr.hl { background: var(--bg-selected); } .chip { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 12px; background: var(--bg-subtle); margin-right: 4px; }
+.chip.ctx { color: var(--text-muted); }
+/* shap bars */
+.shap div { display: grid; grid-template-columns: 160px 1fr 1fr 48px; align-items: center; margin: 4px 0; font-size: 13px; }
+.shap .neg, .shap .pos { display: flex; height: 18px; align-items: center; } .shap .neg { justify-content: flex-end; border-right: 1px solid var(--chart-baseline); }
+.shap .bar { height: 12px; display: block; } .shap .pos .bar { border-radius: 0 4px 4px 0; } .shap .neg .bar { border-radius: 4px 0 0 4px; }
+.shap .num { text-align: right; }
+.shap .grp { display: block; font-weight: 600; color: var(--text-secondary); margin: 10px 0 2px; font-size: 12px; }
+/* app mock */
+.app { border: 1px solid var(--border-hairline); border-radius: var(--r-lg); overflow: hidden; background: var(--bg-page); }
+.topbar { height: 56px; display: flex; align-items: center; gap: 16px; padding: 0 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border-hairline); }
+.topbar .title { font-weight: 700; } .topbar .sp { flex: 1; } .live { display: inline-flex; gap: 6px; align-items: center; color: var(--text-secondary); }
+.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--good); }
+.replay { height: 64px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border-hairline); }
+.track { flex: 1; height: 6px; background: var(--bg-subtle); border-radius: 3px; position: relative; }
+.track i { position: absolute; inset: 0 37% 0 0; background: var(--accent); border-radius: 3px; }
+.track b { position: absolute; left: 63%; top: -5px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg-raised); border: 2px solid var(--accent); }
+.track s { position: absolute; top: -4px; width: 2px; height: 14px; background: var(--critical); }
+.body { display: grid; grid-template-columns: 72px 1fr; min-height: 640px; }
+.nav { background: var(--bg-surface); border-right: 1px solid var(--border-hairline); display: flex; flex-direction: column; gap: 4px; padding: 8px; }
+.nav a { display: block; text-align: center; font-size: 11px; color: var(--text-secondary); padding: 10px 2px; border-radius: var(--r-md); text-decoration: none; }
+.nav a.on { background: var(--bg-selected); color: var(--accent-text); font-weight: 600; }
+.content { padding: 16px; display: grid; gap: 16px; }
+.kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; } .kpis .kpi { width: auto; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr); gap: 16px; }
+.small4 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+svg text { font-family: var(--font); fill: var(--text-muted); font-size: 11px; }
+.feed div { padding: 8px 0; border-bottom: 1px solid var(--border-hairline); display: grid; gap: 4px; }
+@media (max-width: 1280px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } .grid2 { grid-template-columns: 1fr; } }
+@media (max-width: 1024px) { .kpis { grid-template-columns: 1fr 1fr; } .body { grid-template-columns: 1fr; } .nav { flex-direction: row; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main>
+<div class="head">
+  <div>
+    <h1>DieCast-QA 대시보드 디자인 미리보기</h1>
+    <p class="note">10단계 기획안 (확정 전) · 값은 docs/design/tokens.json · 차트는 예시 데이터</p>
+  </div>
+  <div class="seg" role="group" aria-label="테마">
+    <button aria-pressed="true" data-theme-set="light">밝은 테마</button>
+    <button aria-pressed="false" data-theme-set="dark">어두운 테마</button>
+  </div>
+</div>
+
+<h2>1. 색</h2>
+<div class="row" id="semantic"></div>
+<h3 style="margin-top:20px">알람 등급 (상태 색은 아이콘 + 라벨과 함께)</h3>
+<div class="row" id="alarms"></div>
+<h3 style="margin-top:20px">위험 등급 · 불량 유형</h3>
+<div class="row" id="risk"></div>
+<div class="row" id="types" style="margin-top:12px"></div>
+
+<h2>2. 글자 (Pretendard, 숫자는 고정폭)</h2>
+<div class="card type">
+  <div><code>display 32/40 700</code><span style="font-size:32px;line-height:40px;font-weight:700">21.4%</span></div>
+  <div><code>h1 24/32 700</code><span style="font-size:24px;line-height:32px;font-weight:700">운영 현황</span></div>
+  <div><code>h2 18/26 700</code><span style="font-size:18px;line-height:26px;font-weight:700">불량률 관리도 (p-chart)</span></div>
+  <div><code>h3 15/22 600</code><span style="font-size:15px;font-weight:600">최근 50 shot</span></div>
+  <div><code>body 14/20 400</code><span>캐비티1 · 확률 0.42 · 예상 유형 기공</span></div>
+  <div><code>small 13/18 400</code><span style="font-size:13px;color:var(--text-secondary)">기준 12.4% (평가 기간 평균)</span></div>
+  <div><code>caption 12/16 400</code><span class="muted">shot 1,240 · 구간 5</span></div>
+</div>
+
+<h2>3. 컴포넌트</h2>
+<div class="row">
+  <div class="card"><h3>버튼</h3><div class="row" style="gap:8px">
+    <button class="btn btn-primary">조치 보기</button><button class="btn btn-secondary">확인</button>
+    <button class="btn btn-ghost">표로 보기</button><button class="btn btn-danger">전수검사 시작</button></div></div>
+  <div class="card"><h3>재생 속도 (shot/초)</h3><div class="seg" role="group" aria-label="속도">
+    <button aria-pressed="false">1</button><button aria-pressed="false">2</button><button aria-pressed="true">5</button><button aria-pressed="false">10</button></div></div>
+</div>
+<div class="row" style="margin-top:16px">
+  <div class="card kpi"><div class="muted">최근 50 shot 불량률</div><div class="v">12.0%</div><div class="ctx">기준 12.4% · 정상</div></div>
+  <div class="card kpi alarm"><div class="muted">최근 50 shot 불량률</div><div class="v">23.0%</div>
+    <div class="ctx"><span class="badge b-critical" style="font-size:12px;padding:0 6px" data-icon="critical">경고</span> 기준의 1.9배</div></div>
+  <div class="card kpi"><div class="muted">누적 비용 (전수 = 1.00)</div><div class="v">0.79</div><div class="ctx">비용 비율 10:1 · 검사 58%</div></div>
+</div>
+<div style="margin-top:16px" class="banner" role="alert">
+  <span class="badge b-critical" data-icon="critical">경고</span>
+  <div class="msg"><b>불량률 CUSUM 경보</b> · shot 1,212 · 다음 50 shot 전수검사로 전환했습니다.
+    <span class="muted">근거: 경보 뒤 50 shot 불량률은 평균의 1.41배였다(9단계)</span></div>
+  <button class="btn btn-primary">조치 보기</button><button class="btn btn-secondary">확인</button>
+</div>
+<div class="row" style="margin-top:16px">
+  <div class="toast"><span class="badge b-warning" data-icon="warning">주의</span>
+    <b style="margin-left:6px">위험도 상 제품 3건</b><div class="muted" style="margin-top:4px">shot 1,236~1,240 · 예상 유형 기공 2, 미성형 1</div></div>
+  <div class="card" style="flex:1;min-width:420px"><h3>판정 근거 (shot 1,238 · 캐비티1 · 확률 0.46)</h3><p class="muted" style="margin:0 0 4px">← 위험을 낮춤 · 위험을 높임 → (SHAP, log-odds)</p>
+    <div class="shap" id="shap"></div></div>
+</div>
+
+<h2>4. 화면: 운영 현황</h2>
+<div class="app">
+  <div class="topbar"><span class="title">DieCast-QA</span>
+    <span class="chip">제품 유형 2 · 구간 5부터 · 경보 시 재학습</span><span class="sp"></span>
+    <span class="live">재생 중 · shot 1,240 / 1,964</span>
+    <span class="badge b-critical" data-icon="critical">1</span><span class="badge b-warning" data-icon="warning">3</span>
+  </div>
+  <div class="replay"><button class="btn btn-primary" aria-label="정지">❚❚</button>
+    <button class="btn btn-secondary" aria-label="한 shot 뒤로">◀</button><button class="btn btn-secondary" aria-label="한 shot 앞으로">▶</button>
+    <div class="seg"><button aria-pressed="false">1</button><button aria-pressed="false">2</button><button aria-pressed="true">5</button><button aria-pressed="false">10</button></div>
+    <div class="track"><i></i><s style="left:58%"></s><b></b></div><span class="muted">63%</span>
+  </div>
+  <div class="body">
+    <nav class="nav"><a class="on" href="#">운영<br>현황</a><a href="#">제품·<br>검사</a><a href="#">알람<br>센터</a><a href="#">분석<br>요약</a><a href="#">설정</a></nav>
+    <div class="content">
+      <div class="banner" role="alert"><span class="badge b-critical" data-icon="critical">경고</span>
+        <div class="msg"><b>불량률 CUSUM 경보</b> · shot 1,212 · 전수검사 중 (남은 22 shot)</div>
+        <button class="btn btn-primary">조치 보기</button></div>
+      <div class="kpis">
+        <div class="card kpi alarm"><div class="muted">최근 50 shot 불량률</div><div class="v">23.0%</div><div class="ctx">기준 12.4%</div></div>
+        <div class="card kpi"><div class="muted">활성 알람</div><div class="v">4</div><div class="ctx">경고 1 · 주의 3 · 100 shot당 1.1</div></div>
+        <div class="card kpi"><div class="muted">검사 비율 · 누적 포착</div><div class="v">58% · 84%</div><div class="ctx">비용 비율 10:1</div></div>
+        <div class="card kpi"><div class="muted">누적 비용</div><div class="v">0.79</div><div class="ctx">전수검사 1.00 대비</div></div>
+        <div class="card kpi"><div class="muted">진행</div><div class="v">1,240</div><div class="ctx">/ 1,964 shot · 구간 5</div></div>
+      </div>
+      <div class="grid2">
+        <div style="display:grid;gap:16px">
+          <div class="card"><div class="head"><h3>불량률 관리도 (p-chart, 50 shot 부분군)</h3><button class="btn btn-ghost">표로 보기</button></div>
+            <p class="note" style="margin:0 0 8px">부분군 25개 중 관리한계 이탈 3개 · 중심선 0.124</p><svg id="pchart" viewBox="0 0 760 200" width="100%" role="img" aria-label="p-chart 예시"></svg></div>
+          <div class="card"><div class="head"><h3>불량률 CUSUM (상측·하측)</h3></div><svg id="cusum" viewBox="0 0 760 140" width="100%" role="img" aria-label="CUSUM 예시"></svg></div>
+          <div class="card"><div class="head"><h3>공정 변수와 관리 범위(안)</h3><span class="muted">파란 띠 = 관리 범위(안)</span></div>
+            <div class="small4" id="process"></div></div>
+        </div>
+        <div style="display:grid;gap:16px;align-content:start">
+          <div class="card feed"><h3>알람 피드</h3><div id="feed"></div></div>
+          <div class="card"><h3>위험 제품 상위 5</h3>
+            <table><thead><tr><th>shot</th><th>캐비티</th><th class="num">확률</th><th>등급</th><th>예상 유형</th></tr></thead><tbody id="top"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p class="muted" style="margin-top:24px">다른 화면(제품·검사, 알람 센터, 분석 요약)의 구성은 DESIGN_SYSTEM.md 5장의 배치도를 따른다.</p>
+</main>
+<script>
+const ICONS = {
+  critical: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9z"/><path d="M12 8v5M12 16.5v.5"/></svg>',
+  warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 2 21h20z"/><path d="M12 10v5M12 18v.5"/></svg>',
+  info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>',
+  log: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7"/></svg>',
+  resolved: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>',
+};
+document.querySelectorAll('[data-icon]').forEach(el => el.insertAdjacentHTML('afterbegin', ICONS[el.dataset.icon]));
+document.querySelectorAll('[data-theme-set]').forEach(btn => btn.addEventListener('click', () => {
+  document.documentElement.dataset.theme = btn.dataset.themeSet;
+  document.querySelectorAll('[data-theme-set]').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+  draw();
+}));
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const swatch = (name, label, use) => `<div class="sw"><i style="background:var(${name})"></i><b>${label}</b><span>${use} · <span data-var="${name}"></span></span></div>`;
+document.getElementById('semantic').innerHTML = [
+  ['--bg-page', 'bg.page', '페이지'], ['--bg-surface', 'bg.surface', '카드·차트'], ['--bg-raised', 'bg.raised', '팝오버'],
+  ['--text-primary', 'text.primary', '본문'], ['--text-secondary', 'text.secondary', '보조'], ['--text-muted', 'text.muted', '축 눈금'],
+  ['--accent', 'accent.default', '주 버튼'], ['--chart-grid', 'chart.grid', '격자'], ['--chart-band', 'chart.band', '관리 범위 띠'],
+].map(a => swatch(...a)).join('');
+document.getElementById('alarms').innerHTML = [
+  ['critical', '경고', '불량률 CUSUM 경보 → 50 shot 전수검사'], ['warning', '주의', '위험도 상 제품 → 해당 제품 검사'],
+  ['info', '정보', '관리 범위(안) 밖 운전 지속'], ['log', '기록', '공정 변수 급변 (알람 센터에만)'], ['resolved', '해제', '조건 충족 시 자동'],
+].map(([k, l, d]) => `<div class="card" style="width:260px"><span class="badge b-${k}">${ICONS[k]}${l}</span><p class="note" style="font-size:13px">${d}</p></div>`).join('');
+document.getElementById('risk').innerHTML = [['r-high', '상', '보정 확률 ≥ 1/비용 비율 (검사)'], ['r-mid', '중', '평균 불량률 이상'], ['r-low', '하', '그 밖']]
+  .map(([c, l, d]) => `<div class="card" style="width:260px"><span class="badge ${c}">위험 ${l}</span><p class="note" style="font-size:13px">${d}</p></div>`).join('');
+document.getElementById('types').innerHTML = ['미성형', '박리', '기공', '변형', '기타']
+  .map((t, i) => `<div class="card" style="width:150px"><span class="dot" style="background:var(--s${i + 1})"></span> <b>${t}</b><div class="muted" data-var="--s${i + 1}"></div></div>`).join('');
+document.getElementById('shap').innerHTML = (() => {
+  const rows = [['조정 가능 변수'], ['비스킷 두께 = 19', .31], ['냉각수 온도 = 26.4', .22], ['3단 사출 속도 = 0.201', .12], ['용탕 온도 = 664', -.08],
+    ['시기·환경 변수'], ['공장 습도 = 66.5', .41], ['캐비티 = 1', .28], ['shot 순번 = 812', -.05]];
+  return rows.map(r => r.length === 1 ? `<span class="grp">${r[0]}</span>` :
+    `<div><span>${r[0]}</span><span class="neg">${r[1] < 0 ? `<i class="bar" style="width:${-r[1] * 240}px;background:var(--div-neg)"></i>` : ''}</span><span class="pos">${r[1] > 0 ? `<i class="bar" style="width:${r[1] * 240}px;background:var(--div-pos)"></i>` : ''}</span><span class="num">${r[1] > 0 ? '+' : ''}${r[1].toFixed(2)}</span></div>`).join('');
+})();
+document.getElementById('feed').innerHTML = [
+  ['critical', '경고', 'shot 1,212', '불량률 CUSUM 경보 · 기공 비중 32% → 47%'], ['warning', '주의', 'shot 1,238', '위험도 상 3건 · 기공 2, 미성형 1'],
+  ['info', '정보', 'shot 1,190', '냉각수 온도 범위 밖 지속 (20 shot 중 85%)'], ['resolved', '해제', 'shot 1,104', '경고 해제 · 50 shot 동안 새 경보 없음'],
+].map(([k, l, s, m]) => `<div><span><span class="badge b-${k}" style="font-size:12px">${ICONS[k]}${l}</span> <span class="muted">${s}</span></span><span style="font-size:13px">${m}</span></div>`).join('');
+document.getElementById('top').innerHTML = [[1238, 1, .46, '기공'], [1240, 1, .41, '기공'], [1236, 2, .37, '미성형'], [1239, 1, .21, '기타'], [1231, 2, .14, '기공']]
+  .map(([s, c, p, t]) => `<tr class="${p >= .3 ? 'hl' : ''}"><td>${s.toLocaleString()}</td><td>${c}</td><td class="num">${p.toFixed(2)}</td><td><span class="badge ${p >= .3 ? 'r-high' : p >= .124 ? 'r-mid' : 'r-low'}">${p >= .3 ? '상' : p >= .124 ? '중' : '하'}</span></td><td>${t}</td></tr>`).join('');
+
+function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+function draw() {
+  document.querySelectorAll('[data-var]').forEach(el => el.textContent = css(el.dataset.var));
+  const W = 760, pad = {l: 40, r: 12, t: 10, b: 22};
+  // p-chart
+  const r = rng(42), n = 25, p = Array.from({length: n}, (_, i) => Math.max(0, .124 + (i > 18 ? .09 : 0) + (r() - .5) * .09));
+  const H = 200, y = v => H - pad.b - v / .35 * (H - pad.t - pad.b), x = i => pad.l + i * (W - pad.l - pad.r) / (n - 1);
+  const ucl = .124 + 3 * Math.sqrt(.124 * .876 / 100), lcl = Math.max(0, .124 - 3 * Math.sqrt(.124 * .876 / 100));
+  let s = `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="${css('--chart-baseline')}"/>`;
+  [.1, .2, .3].forEach(v => s += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(v)}" y2="${y(v)}" stroke="${css('--chart-grid')}"/><text x="4" y="${y(v) + 4}">${(v * 100).toFixed(0)}%</text>`);
+  s += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(.124)}" y2="${y(.124)}" stroke="${css('--chart-ref')}" stroke-dasharray="4 4"/>`;
+  [ucl, lcl].forEach(v => s += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(v)}" y2="${y(v)}" stroke="${css('--chart-ref')}"/>`);
+  s += `<text x="${pad.l + 4}" y="${y(ucl) - 4}">UCL ${(ucl * 100).toFixed(1)}%</text>`;
+  s += `<polyline fill="none" stroke="${css('--text-primary')}" stroke-width="2" points="${p.map((v, i) => `${x(i)},${y(v)}`).join(' ')}"/>`;
+  p.forEach((v, i) => s += v > ucl ? `<rect x="${x(i) - 5}" y="${y(v) - 5}" width="10" height="10" transform="rotate(45 ${x(i)} ${y(v)})" fill="var(--critical)" stroke="${css('--bg-surface')}" stroke-width="2"/>`
+    : `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${css('--text-primary')}" stroke="${css('--bg-surface')}" stroke-width="2"/>`);
+  s += `<line x1="${x(19)}" x2="${x(19)}" y1="${pad.t}" y2="${y(0)}" stroke="var(--critical)" stroke-dasharray="3 3"/><text x="${x(19) + 4}" y="${pad.t + 10}" style="fill:var(--critical)">경고 shot 1,212</text>`;
+  document.getElementById('pchart').innerHTML = s;
+  // CUSUM
+  const H2 = 140, m = 60, y2 = v => H2 / 2 - v / 10 * (H2 / 2 - 14), x2 = i => pad.l + i * (W - pad.l - pad.r) / (m - 1);
+  let up = 0, lo = 0; const U = [], L = []; const r2 = rng(7);
+  for (let i = 0; i < m; i++) { const z = (i > 44 ? 1.3 : 0) + (r2() - .5) * 1.6; up = Math.max(0, up + z - .25); lo = Math.max(0, lo - z - .25);
+    U.push(up); L.push(-lo); if (up > 8 || lo > 8) { up = 0; lo = 0; } }
+  let c = `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y2(0)}" y2="${y2(0)}" stroke="${css('--chart-baseline')}"/>`;
+  [8, -8].forEach(h => c += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y2(h)}" y2="${y2(h)}" stroke="${css('--chart-ref')}"/><text x="4" y="${y2(h) + 4}">${h > 0 ? '+h' : '−h'}</text>`);
+  c += `<polyline fill="none" stroke="var(--s1)" stroke-width="2" points="${U.map((v, i) => `${x2(i)},${y2(v)}`).join(' ')}"/>`;
+  c += `<polyline fill="none" stroke="var(--s2)" stroke-width="2" points="${L.map((v, i) => `${x2(i)},${y2(v)}`).join(' ')}"/>`;
+  U.forEach((v, i) => { if (v > 8) c += `<rect x="${x2(i) - 5}" y="${y2(v) - 5}" width="10" height="10" transform="rotate(45 ${x2(i)} ${y2(v)})" fill="var(--critical)" stroke="${css('--bg-surface')}" stroke-width="2"/>`; });
+  c += `<text x="${W - pad.r}" y="${y2(U[m - 1]) - 6}" text-anchor="end">상측</text><text x="${W - pad.r}" y="${y2(L[m - 1]) + 14}" text-anchor="end">하측</text>`;
+  document.getElementById('cusum').innerHTML = c;
+  // process small multiples
+  const vars = [['냉각수 온도', 26.0, 28.4, 27.1, null], ['3단 사출 속도', .194, .214, .206, null], ['비스킷 두께', 14, 22, null, 18], ['용탕 온도', 640, 680, null, null]];
+  document.getElementById('process').innerHTML = vars.map(([name, a, b, lo2, hi2], k) => {
+    const rr = rng(11 + k), N = 80, w = 360, h = 96, yy = v => h - 16 - (v - a) / (b - a) * (h - 26), xx = i => 8 + i * (w - 16) / (N - 1);
+    let v = (a + b) / 2, pts = []; for (let i = 0; i < N; i++) { v += (rr() - .5) * (b - a) * .08; v = Math.min(b, Math.max(a, v)); pts.push(v); }
+    let g = `<rect x="0" y="0" width="${w}" height="${h}" fill="none"/>`;
+    if (lo2 !== null || hi2 !== null) { const top = yy(hi2 ?? b), bot = yy(lo2 ?? a); g += `<rect x="8" y="${top}" width="${w - 16}" height="${bot - top}" fill="var(--chart-band)"/>`; }
+    g += `<polyline fill="none" stroke="${css('--text-primary')}" stroke-width="1.6" points="${pts.map((p2, i) => `${xx(i)},${yy(p2)}`).join(' ')}"/>`;
+    const label = lo2 !== null ? `≥ ${lo2}` : hi2 !== null ? `≤ ${hi2}` : '관리 범위 없음';
+    return `<div><div style="display:flex;justify-content:space-between;font-size:13px"><b>${name}</b><span class="muted">${label}</span></div><svg viewBox="0 0 ${w} ${h}" width="100%">${g}</svg></div>`;
+  }).join('');
+}
+if (location.hash === '#dark') document.querySelector('[data-theme-set="dark"]').click(); else draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+Product_Type,chart,variable,statistic,points,signals,signal_share,episodes
+1,p,defect,p,53,22,0.415094,8
+1,ewma,defect_rate,ewma,2653,667,0.251413,55
+1,cusum,defect_rate,cusum_upper,2653,34,0.0128157,34
+1,cusum,defect_rate,cusum_lower,2653,19,0.0071617,19
+2,p,defect,p,39,15,0.384615,9
+2,ewma,defect_rate,ewma,1964,480,0.244399,46
+2,cusum,defect_rate,cusum_upper,1964,26,0.0132383,26
+2,cusum,defect_rate,cusum_lower,1964,14,0.00712831,14

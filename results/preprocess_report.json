@@ -1,0 +1,93 @@
+{
+  "cleaning": {
+    "raw_rows": 7535,
+    "duplicate_rows": 2918,
+    "shots": 4617,
+    "run_sizes": {
+      "1": 1099,
+      "2": 1157,
+      "3": 397,
+      "4": 600,
+      "5": 725,
+      "6": 4,
+      "7": 635
+    },
+    "abnormal_orders": [
+      745,
+      1241,
+      1798,
+      1799,
+      2223,
+      2258,
+      2259,
+      3707
+    ],
+    "missing_shots": {
+      "Factory_Temp": 45,
+      "Factory_Temp_Min": 45,
+      "Factory_Temp_Max": 45,
+      "Factory_Humidity": 45,
+      "Factory_Humidity_Min": 45,
+      "Factory_Humidity_Max": 45
+    }
+  },
+  "feature_sets": {
+    "base": [
+      "Velocity_1",
+      "Velocity_2",
+      "Velocity_3",
+      "High_Velocity",
+      "Cylinder_Pressure",
+      "Casting_Pressure",
+      "Rapid_Rise_Time",
+      "Pressure_Rise_Time",
+      "Biscuit_Thickness",
+      "Clamping_Force",
+      "Cycle_Time",
+      "Spray_Time",
+      "Spray_1_Time",
+      "Spray_2_Time",
+      "Melting_Furnace_Temp",
+      "Air_Pressure",
+      "Coolant_Temp",
+      "Coolant_Pressure",
+      "Factory_Temp",
+      "Factory_Humidity",
+      "Product_Type",
+      "Cavity",
+      "Shot"
+    ],
+    "drift": [
+      "Casting_Pressure__diff1",
+      "High_Velocity__diff1",
+      "Cylinder_Pressure__diff1",
+      "Biscuit_Thickness__diff1",
+      "Melting_Furnace_Temp__diff1",
+      "Cycle_Time__diff1",
+      "Air_Pressure__diff1",
+      "Spray_1_Time__diff1",
+      "Casting_Pressure__std10",
+      "High_Velocity__std10",
+      "Cylinder_Pressure__std10",
+      "Biscuit_Thickness__std10",
+      "Melting_Furnace_Temp__std10",
+      "Cycle_Time__std10",
+      "Air_Pressure__std10",
+      "Spray_1_Time__std10",
+      "Casting_Pressure__dev_med",
+      "High_Velocity__dev_med",
+      "Cylinder_Pressure__dev_med",
+      "Biscuit_Thickness__dev_med",
+      "Melting_Furnace_Temp__dev_med",
+      "Cycle_Time__dev_med",
+      "Air_Pressure__dev_med",
+      "Spray_1_Time__dev_med"
+    ],
+    "history": [
+      "hist_rate_1",
+      "hist_rate_10",
+      "hist_rate_50",
+      "hist_cav_rate_10"
+    ]
+  }
+}

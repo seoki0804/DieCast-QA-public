@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Office lock files
+~$*
+
+# 실험 캐시 (scripts/04_stage1.py --use-cache)
+results/stage1/cache/
+
+# 대시보드 모델 (scripts/11_dashboard_data.py로 다시 만듦)
+models/*.joblib
+
+# KAMP 원본·정제 데이터는 공개 저장소에 올리지 않는다 (README '데이터' 참고)
+data/raw/
+data/processed/

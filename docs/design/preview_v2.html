@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DieCast-QA 화면 시안 v2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* 레이아웃: 제안 설명(위·아래) 사이에 실제 크기의 앱 화면 한 장. 앱 안은 회색조 기본, 색은 이상 상태에만(ISA-101). */
+:root {
+  --bg: #f2f3f0; --surface: #ffffff; --surface-2: #f7f8f5; --line: #e1e3de; --line-2: #c9ccc5;
+  --ink: #111315; --ink-2: #474d53; --ink-3: #6b7178;
+  --accent: #256abf; --accent-ink: #1f5aa3; --accent-soft: rgba(37,106,191,.10);
+  --zone-1: rgba(17,19,21,.085); --zone-2: rgba(17,19,21,.045); --band: rgba(37,106,191,.11); --grid: #eceee9;
+  --bar: #aeb3b8; --spark: #6b7178;
+  --crit: #d03b3b; --crit-soft: rgba(208,59,59,.09); --warn: #fab219; --good: #0ca30c; --good-ink: #0a7a0a;
+  --info-bg: #52575d; --info-ink: #ffffff;
+  --t-short: #2a78d6; --t-exf: #eb6834; --t-por: #1baf7a; --t-def: #eda100; --t-oth: #e87ba4;
+  --font: 'Pretendard Variable', Pretendard, -apple-system, 'Malgun Gothic', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Consolas, 'SFMono-Regular', monospace;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0e10; --surface: #14171a; --surface-2: #191d21; --line: #23282d; --line-2: #343b42;
+  --ink: #e9ebed; --ink-2: #b1b8bf; --ink-3: #8a929a;
+  --accent: #256abf; --accent-ink: #6da7ec; --accent-soft: rgba(109,167,236,.14);
+  --zone-1: rgba(255,255,255,.06); --zone-2: rgba(255,255,255,.03); --band: rgba(109,167,236,.15); --grid: #1f2429;
+  --bar: #4f575f; --spark: #8a929a;
+  --crit-soft: rgba(208,59,59,.17); --good-ink: #3cc13c; --info-bg: #3b4249; --info-ink: #e9ebed;
+  --t-short: #3987e5; --t-exf: #d95926; --t-por: #199e70; --t-def: #c98500; --t-oth: #d55181;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #0c0e10; --surface: #14171a; --surface-2: #191d21; --line: #23282d; --line-2: #343b42;
+  --ink: #e9ebed; --ink-2: #b1b8bf; --ink-3: #8a929a;
+  --accent: #256abf; --accent-ink: #6da7ec; --accent-soft: rgba(109,167,236,.14);
+  --zone-1: rgba(255,255,255,.06); --zone-2: rgba(255,255,255,.03); --band: rgba(109,167,236,.15); --grid: #1f2429;
+  --bar: #4f575f; --spark: #8a929a;
+  --crit-soft: rgba(208,59,59,.17); --good-ink: #3cc13c; --info-bg: #3b4249; --info-ink: #e9ebed;
+  --t-short: #3987e5; --t-exf: #d95926; --t-por: #199e70; --t-def: #c98500; --t-oth: #d55181;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.6 var(--font); font-variant-numeric: tabular-nums;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 56px; }
+a { color: var(--accent-ink); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 2px; }
+.wrap { max-width: 1480px; margin: 0 auto; display: grid; gap: 28px; }
+
+/* 제안서 머리·본문 */
+.intro { display: grid; gap: 6px; max-width: 760px; }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .04em; color: var(--ink-3); text-transform: uppercase; }
+h1 { margin: 6px 0 0; font-size: 30px; line-height: 1.25; letter-spacing: -.01em; text-wrap: balance; }
+.lead { margin: 0; color: var(--ink-2); }
+.doc { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; align-items: start; }
+.doc section { min-width: 0; }
+.doc h2 { font-size: 17px; margin: 0 0 10px; }
+.doc ol, .doc ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--ink-2); font-size: 14px; }
+.doc b { color: var(--ink); font-weight: 600; }
+.doc .src { font-size: 13px; color: var(--ink-3); }
+.note { font-size: 13px; color: var(--ink-3); margin: 0; max-width: 900px; }
+
+/* 앱 화면 */
+.app { background: var(--bg); border: 1px solid var(--line-2); border-radius: 10px; font-size: 13px; line-height: 1.45; }
+.bar { border-radius: 10px 10px 0 0; display: flex; align-items: center; gap: 18px; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.brand { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.crumbs { display: flex; gap: 8px; color: var(--ink-2); flex-wrap: wrap; }
+.crumbs span + span::before { content: "/"; color: var(--line-2); margin-right: 8px; }
+.readouts { display: flex; gap: 16px; margin-left: auto; align-items: center; flex-wrap: wrap; }
+.ro { display: grid; line-height: 1.15; }
+.ro small { font-size: 11px; color: var(--ink-3); }
+.ro b { font: 500 14px/1.3 var(--mono); }
+.lamp { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.lamp i { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--good) 22%, transparent); }
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; background: transparent; padding: 4px 10px; cursor: pointer; font-size: 12px; color: var(--ink-2); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+
+.andon { display: flex; align-items: center; gap: 12px; padding: 8px 16px; border-bottom: 1px solid var(--line); background: var(--crit-soft); flex-wrap: wrap; }
+.andon.ok { background: var(--surface); }
+.andon .msg { font-weight: 600; min-width: 0; }
+.andon .msg span { font-weight: 400; color: var(--ink-2); }
+.andon .act { margin-left: auto; display: flex; gap: 8px; }
+.btn { border: 1px solid var(--line-2); background: var(--surface); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-size: 12px; font-weight: 600; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 700; line-height: 1.5; white-space: nowrap; }
+.chip svg { width: 12px; height: 12px; }
+.chip.critical { background: var(--crit); color: #fff; }
+.chip.warning { background: var(--warn); color: #111315; }
+.chip.info { background: var(--info-bg); color: var(--info-ink); }
+.chip.log { border: 1px solid var(--line-2); color: var(--ink-3); }
+.chip.out { background: transparent; border: 1px solid var(--ink-3); color: var(--ink-2); font-weight: 600; }
+
+.body { padding: 14px 16px 16px; display: grid; gap: 12px; }
+.stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+.stat { padding: 10px 14px 12px; display: grid; gap: 2px; min-width: 0; }
+.stat + .stat { border-left: 1px solid var(--line); }
+.label { display: flex; align-items: center; gap: 5px; color: var(--ink-3); font-size: 12px; }
+.val { font-size: 24px; font-weight: 650; letter-spacing: -.01em; line-height: 1.25; }
+.val small { font-size: 13px; font-weight: 500; color: var(--ink-3); margin-left: 4px; }
+.sub { color: var(--ink-3); font-size: 12px; display: flex; align-items: center; gap: 8px; }
+.meter { position: relative; height: 4px; border-radius: 2px; background: var(--zone-1); flex: 1; min-width: 40px; }
+.meter i { position: absolute; inset: 0 auto 0 0; border-radius: 2px; background: var(--ink-2); }
+.meter.hot i { background: var(--crit); }
+.stat svg.spark { width: 100%; height: 26px; display: block; }
+
+.cols { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 12px; align-items: start; }
+.stack { display: grid; gap: 12px; min-width: 0; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); min-width: 0; }
+.ph { display: flex; align-items: center; gap: 6px; padding: 9px 12px 0; }
+.ph h3 { margin: 0; font-size: 13px; font-weight: 650; }
+.ph .meta { margin-left: auto; color: var(--ink-3); font-size: 12px; }
+.chart { width: 100%; }
+.legend { display: flex; gap: 14px; padding: 2px 12px 0; color: var(--ink-3); font-size: 11.5px; flex-wrap: wrap; }
+.legend i { display: inline-block; width: 12px; height: 2px; vertical-align: middle; margin-right: 5px; background: var(--ink-3); }
+.legend i.band { height: 10px; background: var(--band); }
+.legend i.now { background: var(--accent-ink); height: 3px; }
+.legend i.zone { height: 10px; background: var(--zone-1); }
+.legend i.dot { width: 7px; height: 7px; border-radius: 50%; }
+.kv { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--line); margin-top: 4px; }
+.kv div { padding: 7px 10px 9px; display: grid; min-width: 0; }
+.kv div + div { border-left: 1px solid var(--line); }
+.kv small { color: var(--ink-3); font-size: 11px; }
+.kv b { font: 500 13px/1.4 var(--mono); }
+
+.alist { list-style: none; margin: 0; padding: 6px 0 4px; }
+.alist li { border-top: 1px solid var(--line); }
+.alist li:first-child { border-top: 0; }
+.arow { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 12px; background: none; border: 0; text-align: left; cursor: pointer; }
+.arow:hover { background: var(--surface-2); }
+.arow .t { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.arow .s { font: 12px var(--mono); color: var(--ink-3); }
+.adetail { padding: 0 12px 10px 12px; color: var(--ink-2); font-size: 12px; }
+.afoot { padding: 6px 12px 10px; color: var(--ink-3); font-size: 12px; border-top: 1px solid var(--line); }
+
+.plates { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; }
+.plate { position: relative; display: grid; gap: 3px; padding: 10px 12px 11px; border: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); background: var(--surface); text-align: left; cursor: pointer; min-width: 0; }
+.plate:nth-child(5n+1) { border-left: 0; }
+.plate:hover { background: var(--surface-2); }
+.plate[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--accent-ink); z-index: 1; }
+.plate .nm { display: flex; justify-content: space-between; gap: 6px; color: var(--ink-2); font-size: 12px; }
+.plate .nm span:last-child { font: 11px var(--mono); color: var(--ink-3); }
+.plate .v { display: flex; align-items: baseline; gap: 8px; }
+.plate .v b { font-size: 19px; font-weight: 650; letter-spacing: -.01em; }
+.plate .v em { font: normal 11px var(--mono); color: var(--ink-3); }
+.plate .chip { margin-left: auto; }
+.plate svg { width: 100%; display: block; }
+
+.mini { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.mini > div { padding: 8px 12px 12px; min-width: 0; }
+.mini > div + div { border-left: 1px solid var(--line); }
+.hb { display: grid; grid-template-columns: 64px minmax(0, 1fr) 70px; gap: 8px; align-items: center; margin-top: 7px; font-size: 12px; }
+.hb .track { height: 8px; border-radius: 0 4px 4px 0; background: var(--zone-2); }
+.hb .fill { height: 100%; border-radius: 0 4px 4px 0; }
+.hb span:last-child { text-align: right; font-family: var(--mono); color: var(--ink-2); font-size: 11.5px; }
+.cap { color: var(--ink-3); font-size: 12px; }
+
+/* 도움말 ? */
+.help { position: relative; display: inline-flex; }
+.help > button { width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--line-2); background: transparent; color: var(--ink-3); font: 700 10px/1 var(--font); padding: 0; cursor: help; display: inline-grid; place-items: center; }
+.help > button:hover, .help > button[aria-expanded="true"] { border-color: var(--ink-3); color: var(--ink); }
+.tip { position: absolute; z-index: 20; top: calc(100% + 6px); left: -8px; width: min(300px, 72vw); padding: 9px 11px; border-radius: 6px; background: var(--ink); color: var(--surface); font-size: 12px; font-weight: 400; line-height: 1.5; box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+.tip.right { left: auto; right: -8px; }
+
+@media (max-width: 1180px) {
+  .cols { grid-template-columns: minmax(0, 1fr); }
+  .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stat:nth-child(4) { border-left: 0; }
+  .stat:nth-child(n+4) { border-top: 1px solid var(--line); }
+  .stat:last-child { grid-column: span 2; }
+  .doc { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 900px) {
+  .plates { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .plate:nth-child(5n+1) { border-left: 1px solid var(--line); }
+  .plate:nth-child(3n+1) { border-left: 0; }
+}
+@media (max-width: 620px) {
+  body { padding-block: 20px 40px; }
+  h1 { font-size: 24px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat:nth-child(n) { border-left: 0; border-top: 1px solid var(--line); }
+  .stat:nth-child(1) { border-top: 0; }
+  .stat:nth-child(2n) { border-left: 1px solid var(--line); }
+  .stat:nth-child(2) { border-top: 0; }
+  .stat:last-child { grid-column: 1 / -1; }
+  .plates { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .plate:nth-child(3n+1) { border-left: 1px solid var(--line); }
+  .plate:nth-child(2n+1) { border-left: 0; }
+  .kv { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .kv div:nth-child(4) { border-left: 0; }
+  .kv div:nth-child(n+4) { border-top: 1px solid var(--line); }
+  .mini { grid-template-columns: minmax(0, 1fr); }
+  .mini > div + div { border-left: 0; border-top: 1px solid var(--line); }
+  .readouts { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <p class="eyebrow">DieCast-QA · 대시보드 개선 시안 v2 · 2026-11-19</p>
+    <h1>현장 화면처럼, 글은 줄이고 그림으로</h1>
+    <p class="lead">실제 재생 데이터(제품 유형 1 · 구간 2 · shot 905 시점)로 그린 운영 현황 화면입니다. 화면 오른쪽 위에서 한국어/English와 밝게/어둡게를 바꿔 보고, 공정 변수 칸을 누르면 관리도와 분포가 그 변수로 바뀝니다.</p>
+  </header>
+
+  <div class="app" id="app">
+    <div class="bar">
+      <span class="brand">DieCast-QA</span>
+      <span class="crumbs" id="crumbs"></span>
+      <div class="readouts">
+        <span class="lamp"><i></i><span data-t="lamp"></span></span>
+        <span class="ro"><small data-t="ro.shot"></small><b id="ro-shot"></b></span>
+        <span class="ro"><small data-t="ro.elapsed"></small><b id="ro-clock"></b></span>
+        <span class="seg" role="group" aria-label="Language">
+          <button type="button" id="lang-ko" aria-pressed="true">한국어</button><button type="button" id="lang-en" aria-pressed="false">EN</button>
+        </span>
+        <span class="seg" role="group" aria-label="Theme">
+          <button type="button" id="th-light" data-t="th.light"></button><button type="button" id="th-dark" data-t="th.dark"></button>
+        </span>
+      </div>
+    </div>
+    <div class="andon" id="andon"></div>
+    <div class="body">
+      <div class="stats" id="stats"></div>
+      <div class="cols">
+        <div class="stack">
+          <section class="panel">
+            <div class="ph"><h3 data-t="p.title"></h3><span class="help" data-tip="tip.p"></span><span class="meta" data-t="p.meta"></span></div>
+            <div class="legend"><span><i></i><span data-t="lg.rate"></span></span><span><i style="background:var(--line-2)"></i><span data-t="lg.limits"></span></span><span><i class="dot" style="background:var(--crit)"></i><span data-t="lg.up"></span></span><span><i class="dot" style="background:var(--good)"></i><span data-t="lg.down"></span></span></div>
+            <div class="chart" id="c-p" style="height:210px"></div>
+          </section>
+          <section class="panel">
+            <div class="ph"><h3 id="imr-title"></h3><span class="help" data-tip="tip.imr"></span><span class="meta" data-t="imr.meta"></span></div>
+            <div class="legend"><span><i class="zone"></i>±1σ · ±2σ</span><span><i class="dot" style="background:var(--crit)"></i><span data-t="lg.r1"></span></span><span><i class="dot" style="background:var(--warn)"></i><span data-t="lg.r2"></span></span></div>
+            <div class="chart" id="c-imr" style="height:270px"></div>
+          </section>
+        </div>
+        <div class="stack">
+          <section class="panel">
+            <div class="ph"><h3 id="dist-title"></h3><span class="help" data-tip="tip.dist" data-align="right"></span><span class="meta" data-t="dist.meta"></span></div>
+            <div class="legend"><span><i class="now"></i><span data-t="lg.now"></span></span><span><i></i><span data-t="lg.mean"></span></span><span id="lg-band"><i class="band"></i><span data-t="lg.band"></span></span></div>
+            <div class="chart" id="c-dist" style="height:230px"></div>
+            <div class="kv" id="dist-kv"></div>
+          </section>
+          <section class="panel">
+            <div class="ph"><h3 data-t="al.title"></h3><span class="help" data-tip="tip.al" data-align="right"></span></div>
+            <ul class="alist" id="alist"></ul>
+            <div class="afoot" id="afoot"></div>
+          </section>
+        </div>
+      </div>
+      <section class="panel">
+        <div class="ph" style="padding-bottom:9px"><h3 data-t="pl.title"></h3><span class="help" data-tip="tip.pl"></span><span class="meta" data-t="pl.meta"></span></div>
+        <div class="plates" id="plates"></div>
+      </section>
+      <section class="panel">
+        <div class="mini">
+          <div><div class="ph" style="padding:0"><h3 data-t="pa.title"></h3><span class="help" data-tip="tip.pa"></span><span class="meta" data-t="w300"></span></div><div id="pareto"></div></div>
+          <div><div class="ph" style="padding:0"><h3 data-t="cv.title"></h3><span class="help" data-tip="tip.cv" data-align="right"></span><span class="meta" data-t="w300"></span></div><div id="cavity"></div></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="doc">
+    <section>
+      <h2>지금 화면에서 바꾸는 것</h2>
+      <ol>
+        <li><b>상태를 먼저.</b> 같은 크기의 KPI 카드 5개 대신 맨 위 상태 띠 하나가 "지금 문제가 있나"에 답하고, 숫자는 얇은 한 줄로 내린다.</li>
+        <li><b>설명은 ?로.</b> 차트 부제, 카드 보조 문장, 알람 설명을 펼쳐 두지 않는다. 한 줄 라벨과 ? 툴팁, 알람은 눌러서 펼친다.</li>
+        <li><b>공정 변수를 화면에.</b> 지금은 변수 값이 제품 상세 안에만 있다. 값·단위·추세·분포 위치를 한 칸에 담은 변수 패널 10개를 둔다.</li>
+        <li><b>SPC 그림을 현장 방식으로.</b> 변수 추세선을 I-MR 관리도(σ 구역, 규칙 위반 표시)로, 분포는 히스토그램과 정규곡선에 현재 값을 겹친다.</li>
+        <li><b>색은 이상할 때만.</b> 평소에는 회색조, 경고·범위 이탈만 색. 모든 블록을 둥근 카드로 감싸지 않고 얇은 선으로 나눈다.</li>
+        <li><b>한/영 전환.</b> 화면 문구를 사전 하나로 모아 전환한다. 주소에 <code>?lang=en</code>을 붙여도 영어로 열린다.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>참고한 현장 화면</h2>
+      <ul>
+        <li><a href="https://www.buhlergroup.com/global/en/services/digital-services/die-casting-dashboard.html" target="_blank" rel="noopener">Bühler Insights Die Casting Dashboard</a>: 생산 상태를 한눈에 보고 설비별로 들어간다. 상태 띠와 맥락 줄의 근거.</li>
+        <li><a href="https://support.minitab.com/minitab/help-and-how-to/quality-and-process-improvement/capability-analysis/how-to/capability-sixpack/normal-capability-sixpack/interpret-the-results/key-results" target="_blank" rel="noopener">Minitab Capability Sixpack</a>: 부분군 1이면 I-MR 관리도, 히스토그램과 정규곡선. 관리도·분포 패널의 근거.</li>
+        <li><a href="https://grafana.com/grafana/plugins/kensobi-spchistogram-panel/" target="_blank" rel="noopener">Grafana SPC Histogram</a> · <a href="https://grafana.com/grafana/plugins/kensobi-spcbullet-panel/" target="_blank" rel="noopener">SPC Bullet</a>: 정규곡선 히스토그램, 목표 대비 위치를 보여 주는 막대. 변수 패널의 σ 막대.</li>
+        <li><a href="https://control.com/technical-articles/going-gray/" target="_blank" rel="noopener">ISA-101 고성능 HMI</a>: 회색 바탕, 색은 이상 상태에만, 색 말고 모양·숫자로도 구분.</li>
+        <li><a href="https://www.controleng.com/implementing-alarm-management-per-the-ansi-isa-18-2-standard/" target="_blank" rel="noopener">ISA-18.2 알람 관리</a>: 우선순위는 3~4단계, 알람 요약 화면은 정렬·필터·보류. 알람 목록의 근거.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>정할 것</h2>
+      <ol>
+        <li><b>기본 테마.</b> 발표용 밝은 화면을 기본으로 두고 어두운 '관제실' 화면을 함께 낼지, 어두운 쪽을 기본으로 할지.</li>
+        <li><b>단위.</b> KAMP 자료에 단위가 없다. 값 범위로 추정한 단위(m/s, bar, ℃, s, mm)를 '추정'이라 밝히고 보일지, 단위 없이 갈지.</li>
+        <li><b>범위.</b> 이 방식을 5개 화면(운영 현황, 제품·검사, 알람 센터, 분석 요약, 설정)에 모두 적용하고 보고서 화면 캡처도 다시 찍는다.</li>
+      </ol>
+    </section>
+  </div>
+  <p class="note">실제 다이캐스팅 모니터는 shot마다 사출 곡선(스트로크별 속도·압력)을 그리지만, 이 데이터에는 shot별 요약값만 있어 그 곡선은 그릴 수 없다. 대신 요약값의 관리도와 분포로 같은 질문(이번 shot이 평소와 다른가)에 답한다.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<script type="application/json" id="data">{"at":820,"n":1554,"run":2,"shot":905,"clock_s":17231.4,"parts":1642,"defects":134,"pchart":{"center":0.2145,"groups":[{"end":49,"shot":50,"run":2,"rate":0.21,"parts":100},{"end":99,"shot":100,"run":2,"rate":0.14,"parts":100},{"end":149,"shot":150,"run":2,"rate":0.08,"parts":100},{"end":199,"shot":200,"run":2,"rate":0.1,"parts":100},{"end":249,"shot":250,"run":2,"rate":0.07,"parts":100},{"end":299,"shot":300,"run":2,"rate":0.07,"parts":100},{"end":349,"shot":350,"run":2,"rate":0.09,"parts":100},{"end":399,"shot":400,"run":2,"rate":0.08,"parts":100},{"end":449,"shot":453,"run":2,"rate":0.1,"parts":100},{"end":499,"shot":503,"run":2,"rate":0.11,"parts":100},{"end":549,"shot":553,"run":2,"rate":0.06,"parts":100},{"end":599,"shot":603,"run":2,"rate":0.07,"parts":100},{"end":649,"shot":653,"run":2,"rate":0.02,"parts":100},{"end":699,"shot":703,"run":2,"rate":0.06,"parts":100},{"end":749,"shot":834,"run":2,"rate":0.0,"parts":100},{"end":799,"shot":884,"run":2,"rate":0.05,"parts":100}]},"cusum":{"k":0.25,"h":8.0},"ranges":{"Cycle_Time":{"low":21.0,"high":null},"Biscuit_Thickness":{"low":12.0,"high":null}},"vars":["Velocity_1","Velocity_2","Velocity_3","High_Velocity","Cylinder_Pressure","Casting_Pressure","Rapid_Rise_Time","Pressure_Rise_Time","Biscuit_Thickness","Clamping_Force","Cycle_Time","Spray_Time","Spray_1_Time","Spray_2_Time","Melting_Furnace_Temp","Air_Pressure","Coolant_Temp","Coolant_Pressure","Factory_Temp","Factory_Humidity"],"w":{"i":[521,522,523,524,525,526,527,528,529,530,531,532,533,534,535,536,537,538,539,540,541,542,543,544,545,546,547,548,549,550,551,552,553,554,555,556,557,558,559,560,561,562,563,564,565,566,567,568,569,570,571,572,573,574,575,576,577,578,579,580,581,582,583,584,585,586,587,588,589,590,591,592,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607,608,609,610,611,612,613,614,615,616,617,618,619,620,621,622,623,624,625,626,627,628,629,630,631,632,633,634,635,636,637,638,639,640,641,642,643,644,645,646,647,648,649,650,651,652,653,654,655,656,657,658,659,660,661,662,663,664,665,666,667,668,669,670,671,672,673,674,675,676,677,678,679,680,681,682,683,684,685,686,687,688,689,690,691,692,693,694,695,696,697,698,699,700,701,702,703,704,705,706,707,708,709,710,711,712,713,714,715,716,717,718,719,720,721,722,723,724,725,726,727,728,729,730,731,732,733,734,735,736,737,738,739,740,741,742,743,744,745,746,747,748,749,750,751,752,753,754,755,756,757,758,759,760,761,762,763,764,765,766,767,768,769,770,771,772,773,774,775,776,777,778,779,780,781,782,783,784,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,810,811,812,813,814,815,816,817,818,819,820],"shot":[525,526,527,528,529,530,531,532,533,534,535,536,537,538,539,540,541,542,543,544,545,546,547,548,549,550,551,552,553,554,555,556,557,558,559,560,561,562,563,564,565,566,567,568,569,570,571,572,573,574,575,576,577,578,579,580,581,582,583,584,585,586,587,588,589,590,591,592,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607,608,609,610,611,612,613,614,615,616,617,618,619,620,621,622,623,624,625,626,627,628,629,630,631,632,633,634,635,636,637,638,639,640,641,642,643,644,645,646,647,648,649,650,651,652,653,654,655,656,657,658,659,660,661,662,663,664,665,666,667,668,669,670,671,672,673,674,675,676,677,678,679,680,681,682,683,684,685,686,687,688,689,690,691,692,693,694,695,696,697,698,699,700,701,702,703,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,810,811,812,813,814,815,816,817,818,819,820,821,822,823,824,825,826,827,828,829,830,831,832,833,834,835,836,837,838,839,840,841,842,843,844,845,846,847,848,849,850,851,852,853,854,855,856,857,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,873,874,875,876,877,878,879,880,881,882,883,884,885,886,887,888,889,890,891,892,893,894,895,896,897,898,899,900,901,902,903,904,905],"run":[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],"cu":[1.712,0.904,0.095,0.0,0.0,0.0,1.26,2.521,1.712,0.904,0.095,0.0,0.0,0.0,1.26,0.452,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.26,0.452,0.0,0.0,1.26,0.452,0.0,1.26,0.452,1.712,0.904,0.095,0.0,0.0,1.26,2.521,1.712,0.904,0.095,0.0,0.0,0.0,1.26,0.452,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.896,1.222,0.548,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.896,1.222,0.548,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.896,1.222,0.548,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.896,1.222,0.548,2.444,1.77,3.666,2.992,2.318,4.214,3.54,2.866,4.762,4.088,3.414,2.74,2.066,1.391,0.717,0.043,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.193,2.664,2.135,1.605,1.076,0.547,0.018,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.193,2.664,5.856,9.049,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.478,2.969,2.46,1.951,1.442,0.932,0.423,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.478,2.969,2.46,1.951,1.442,0.932,0.423,0.0,3.478,2.969,2.46,1.951,5.429,4.92,4.411,3.902,3.393,2.883],"y":[[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,1],[0,0],[1,0],[0,0],[0,0],[0,0],[0,0],[1,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[1,0],[0,0],[1,0],[0,0],[0,0],[1,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,1],[0,0],[1,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0]],"p":[[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.44,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.44,0.25],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.44,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.406,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.263,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.44,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.44,0.073],[0.263,0.073],[0.333,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.073,0.073],[0.25,0.073],[0.263,0.073],[0.25,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.253,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.263,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.25,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073],[0.073,0.073]],"t":[["normal","exfoliation"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","exfoliation"],["normal","exfoliation"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","exfoliation"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["short_shot","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","exfoliation"],["normal","normal"],["normal","normal"],["normal","exfoliation"],["normal","normal"],["exfoliation","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["exfoliation","normal"],["porosity","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["short_shot","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","short_shot"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","short_shot"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["short_shot","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","short_shot"],["normal","normal"],["normal","normal"],["short_shot","normal"],["normal","normal"],["exfoliation","normal"],["normal","normal"],["normal","normal"],["exfoliation","normal"],["normal","normal"],["normal","normal"],["porosity","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["porosity","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","short_shot"],["normal","normal"],["exfoliation","normal"],["exfoliation","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["exfoliation","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["exfoliation","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["exfoliation","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["porosity","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"],["normal","normal"]],"x":{"Velocity_1":[0.14,0.142,0.144,0.144,0.142,0.146,0.144,0.142,0.142,0.142,0.144,0.141,0.141,0.144,0.144,0.146,0.144,0.146,0.142,0.146,0.144,0.146,0.144,0.144,0.144,0.146,0.146,0.142,0.142,0.144,0.144,0.144,0.142,0.138,0.142,0.142,0.146,0.144,0.142,0.142,0.142,0.144,0.144,0.148,0.144,0.144,0.146,0.146,0.144,0.144,0.142,0.141,0.141,0.142,0.142,0.144,0.144,0.141,0.144,0.14,0.142,0.142,0.144,0.142,0.138,0.138,0.144,0.142,0.14,0.141,0.14,0.144,0.144,0.142,0.142,0.14,0.138,0.14,0.144,0.142,0.141,0.144,0.144,0.146,0.142,0.142,0.14,0.146,0.142,0.142,0.14,0.142,0.144,0.146,0.142,0.142,0.144,0.144,0.144,0.144,0.148,0.142,0.144,0.144,0.142,0.144,0.142,0.146,0.144,0.144,0.146,0.144,0.144,0.14,0.14,0.14,0.144,0.138,0.142,0.141,0.141,0.142,0.141,0.141,0.142,0.142,0.146,0.142,0.144,0.142,0.144,0.146,0.144,0.144,0.144,0.142,0.142,0.141,0.142,0.142,0.144,0.146,0.144,0.14,0.14,0.142,0.144,0.146,0.141,0.144,0.144,0.141,0.146,0.144,0.142,0.142,0.139,0.142,0.144,0.144,0.142,0.144,0.142,0.142,0.142,0.14,0.142,0.142,0.142,0.146,0.142,0.142,0.142,0.14,0.144,0.146,0.144,0.144,0.142,0.142,0.144,0.144,0.144,0.142,0.14,0.138,0.141,0.14,0.142,0.142,0.14,0.14,0.142,0.142,0.14,0.144,0.144,0.14,0.144,0.144,0.144,0.144,0.144,0.146,0.146,0.146,0.144,0.142,0.142,0.142,0.142,0.142,0.144,0.139,0.144,0.142,0.138,0.144,0.142,0.14,0.142,0.141,0.142,0.142,0.14,0.142,0.142,0.141,0.146,0.144,0.146,0.14,0.144,0.144,0.14,0.142,0.144,0.144,0.144,0.144,0.144,0.144,0.144,0.144,0.144,0.146,0.141,0.144,0.142,0.142,0.144,0.146,0.144,0.142,0.138,0.141,0.14,0.142,0.142,0.142,0.141,0.142,0.144,0.144,0.144,0.144,0.144,0.146,0.144,0.142,0.141,0.144,0.141,0.146,0.142,0.14,0.141,0.14,0.144,0.144,0.14,0.139,0.144,0.144,0.142,0.144,0.142,0.142,0.142,0.142,0.144,0.141,0.142,0.144,0.142,0.142,0.141,0.141,0.142,0.142],"Velocity_2":[0.164,0.168,0.166,0.17,0.166,0.166,0.17,0.166,0.166,0.17,0.168,0.168,0.168,0.168,0.168,0.17,0.168,0.166,0.166,0.165,0.168,0.168,0.166,0.168,0.166,0.168,0.166,0.166,0.168,0.17,0.166,0.166,0.17,0.168,0.166,0.166,0.168,0.166,0.168,0.17,0.168,0.168,0.168,0.168,0.166,0.166,0.17,0.17,0.168,0.168,0.168,0.17,0.17,0.171,0.17,0.172,0.17,0.17,0.168,0.168,0.17,0.17,0.168,0.17,0.168,0.168,0.168,0.17,0.168,0.168,0.166,0.168,0.17,0.166,0.168,0.168,0.166,0.166,0.168,0.168,0.168,0.168,0.168,0.168,0.168,0.166,0.168,0.168,0.166,0.164,0.168,0.17,0.166,0.168,0.166,0.166,0.17,0.17,0.168,0.168,0.166,0.166,0.166,0.165,0.168,0.168,0.166,0.168,0.168,0.168,0.166,0.166,0.164,0.166,0.168,0.168,0.168,0.164,0.168,0.166,0.166,0.166,0.164,0.164,0.168,0.168,0.168,0.168,0.168,0.168,0.168,0.168,0.166,0.165,0.17,0.168,0.168,0.17,0.166,0.168,0.17,0.17,0.17,0.168,0.17,0.168,0.17,0.166,0.168,0.168,0.168,0.168,0.168,0.168,0.168,0.166,0.17,0.166,0.168,0.17,0.168,0.17,0.166,0.166,0.166,0.168,0.168,0.17,0.166,0.168,0.168,0.168,0.168,0.168,0.168,0.168,0.166,0.166,0.168,0.168,0.168,0.168,0.168,0.168,0.168,0.168,0.168,0.17,0.166,0.166,0.17,0.17,0.17,0.17,0.168,0.168,0.168,0.168,0.168,0.17,0.17,0.17,0.168,0.17,0.17,0.171,0.17,0.168,0.17,0.17,0.168,0.17,0.17,0.166,0.166,0.168,0.168,0.168,0.168,0.168,0.168,0.166,0.168,0.168,0.168,0.168,0.17,0.17,0.168,0.168,0.168,0.166,0.168,0.168,0.168,0.168,0.165,0.165,0.17,0.17,0.17,0.17,0.166,0.17,0.17,0.17,0.166,0.168,0.166,0.166,0.166,0.166,0.166,0.168,0.168,0.168,0.168,0.166,0.166,0.168,0.168,0.17,0.168,0.17,0.17,0.168,0.168,0.17,0.166,0.166,0.168,0.168,0.171,0.17,0.172,0.174,0.17,0.17,0.168,0.168,0.17,0.17,0.168,0.168,0.17,0.168,0.17,0.17,0.166,0.168,0.17,0.168,0.168,0.168,0.165,0.168,0.168,0.168,0.17,0.17],"Velocity_3":[0.176,0.182,0.176,0.178,0.174,0.184,0.182,0.19,0.176,0.182,0.179,0.182,0.182,0.181,0.181,0.182,0.18,0.176,0.186,0.18,0.18,0.184,0.19,0.176,0.188,0.176,0.19,0.178,0.186,0.174,0.182,0.186,0.181,0.182,0.179,0.182,0.178,0.184,0.181,0.184,0.178,0.185,0.185,0.18,0.187,0.187,0.178,0.178,0.186,0.186,0.178,0.184,0.184,0.186,0.184,0.18,0.178,0.189,0.178,0.186,0.176,0.182,0.179,0.188,0.185,0.185,0.189,0.182,0.186,0.174,0.176,0.182,0.174,0.176,0.182,0.181,0.186,0.179,0.182,0.179,0.182,0.172,0.172,0.187,0.186,0.184,0.176,0.18,0.184,0.174,0.178,0.184,0.182,0.179,0.186,0.186,0.188,0.188,0.176,0.176,0.181,0.184,0.186,0.182,0.186,0.182,0.186,0.18,0.182,0.178,0.176,0.178,0.188,0.186,0.187,0.187,0.178,0.179,0.179,0.178,0.186,0.184,0.182,0.182,0.184,0.184,0.184,0.18,0.188,0.176,0.186,0.176,0.178,0.186,0.185,0.188,0.176,0.182,0.184,0.179,0.188,0.178,0.178,0.188,0.178,0.174,0.181,0.19,0.187,0.186,0.176,0.186,0.176,0.182,0.186,0.176,0.178,0.179,0.188,0.185,0.182,0.182,0.174,0.18,0.182,0.186,0.184,0.179,0.188,0.182,0.174,0.186,0.184,0.179,0.182,0.176,0.178,0.184,0.174,0.174,0.176,0.176,0.176,0.179,0.178,0.179,0.182,0.182,0.182,0.182,0.184,0.184,0.184,0.184,0.186,0.182,0.178,0.189,0.18,0.178,0.18,0.18,0.178,0.188,0.19,0.178,0.182,0.184,0.184,0.178,0.186,0.178,0.176,0.184,0.189,0.182,0.178,0.182,0.179,0.178,0.179,0.178,0.178,0.184,0.18,0.182,0.18,0.184,0.184,0.186,0.178,0.174,0.18,0.187,0.176,0.18,0.187,0.187,0.184,0.184,0.186,0.186,0.178,0.176,0.176,0.179,0.178,0.176,0.178,0.178,0.182,0.179,0.181,0.186,0.186,0.174,0.178,0.184,0.181,0.182,0.181,0.18,0.18,0.181,0.181,0.19,0.19,0.176,0.189,0.176,0.189,0.188,0.19,0.178,0.178,0.178,0.184,0.176,0.187,0.188,0.188,0.178,0.181,0.182,0.176,0.186,0.187,0.186,0.176,0.182,0.18,0.174,0.178,0.176,0.18,0.186,0.178,0.178,0.176,0.176],"High_Velocity":[2.095,2.141,2.112,2.14,2.111,2.141,2.137,2.157,2.161,2.134,2.123,2.15,2.15,2.133,2.133,2.137,2.146,2.149,2.124,2.119,2.139,2.151,2.141,2.118,2.113,2.155,2.106,2.121,2.111,2.141,2.108,2.142,2.139,2.11,2.131,2.128,2.141,2.146,2.135,2.146,2.13,2.148,2.152,2.13,2.155,2.155,2.151,2.151,2.114,2.114,2.12,2.157,2.157,2.143,2.147,2.137,2.136,2.161,2.108,2.111,2.112,2.111,2.127,2.138,2.124,2.124,2.131,2.129,2.155,2.128,2.118,2.126,2.116,2.111,2.15,2.158,2.139,2.104,2.121,2.102,2.146,2.161,2.161,2.147,2.143,2.128,2.103,2.101,2.132,2.11,2.107,2.155,2.108,2.124,2.143,2.143,2.134,2.134,2.159,2.1,2.14,2.143,2.146,2.111,2.134,2.139,2.16,2.144,2.125,2.123,2.134,2.158,2.131,2.139,2.131,2.131,2.141,2.145,2.108,2.122,2.14,2.156,2.124,2.124,2.152,2.152,2.161,2.144,2.157,2.102,2.132,2.132,2.163,2.11,2.131,2.146,2.112,2.115,2.137,2.123,2.118,2.115,2.155,2.123,2.106,2.147,2.145,2.134,2.127,2.133,2.132,2.139,2.149,2.13,2.124,2.123,2.149,2.147,2.147,2.099,2.106,2.133,2.112,2.137,2.161,2.124,2.148,2.157,2.11,2.128,2.147,2.128,2.125,2.148,2.102,2.137,2.055,2.106,2.069,2.069,2.114,2.146,2.146,2.153,2.131,2.112,2.15,2.131,2.131,2.12,2.131,2.131,2.154,2.154,2.135,2.164,2.142,2.147,2.127,2.131,2.158,2.123,2.142,2.141,2.117,2.152,2.173,2.149,2.114,2.124,2.117,2.131,2.157,2.131,2.143,2.148,2.152,2.119,2.144,2.153,2.157,2.134,2.16,2.109,2.153,2.124,2.154,2.124,2.15,2.125,2.111,2.152,2.146,2.141,2.142,2.129,2.134,2.134,2.155,2.155,2.161,2.161,2.115,2.164,2.164,2.136,2.149,2.151,2.137,2.137,2.147,2.156,2.138,2.16,2.145,2.119,2.11,2.165,2.163,2.171,2.164,2.154,2.122,2.122,2.122,2.149,2.149,2.118,2.117,2.131,2.133,2.139,2.123,2.144,2.155,2.152,2.16,2.14,2.156,2.136,2.142,2.143,2.151,2.132,2.15,2.151,2.153,2.164,2.109,2.113,2.145,2.121,2.148,2.113,2.125,2.105,2.142,2.142,2.128,2.128],"Cylinder_Pressure":[214.0,217.0,214.0,218.0,218.0,215.0,218.0,214.0,217.0,214.0,218.0,214.0,214.0,214.0,214.0,214.0,218.0,214.0,218.0,214.0,218.0,214.0,218.0,214.0,217.0,214.0,217.0,214.0,217.0,214.0,217.0,214.0,218.0,215.0,217.0,218.0,215.0,217.0,214.0,218.0,214.0,218.0,214.0,218.0,214.0,214.0,214.0,214.0,215.0,215.0,214.0,218.0,218.0,214.0,217.0,218.0,215.0,216.0,216.0,217.0,214.0,218.0,218.0,215.0,215.0,215.0,215.0,218.0,214.0,218.0,218.0,215.0,216.0,217.0,214.0,217.0,214.0,218.0,214.0,217.0,218.0,215.0,215.0,214.0,218.0,214.0,218.0,214.0,218.0,214.0,218.0,214.0,218.0,214.0,218.0,218.0,218.0,218.0,218.0,214.0,218.0,214.0,218.0,214.0,217.0,214.0,218.0,214.0,218.0,218.0,215.0,218.0,218.0,215.0,218.0,218.0,218.0,215.0,218.0,218.0,215.0,217.0,214.0,214.0,214.0,214.0,217.0,214.0,217.0,214.0,218.0,214.0,218.0,214.0,218.0,218.0,218.0,215.0,217.0,218.0,215.0,218.0,215.0,217.0,218.0,215.0,217.0,214.0,218.0,214.0,218.0,215.0,218.0,214.0,218.0,214.0,218.0,214.0,218.0,214.0,218.0,214.0,218.0,214.0,217.0,218.0,214.0,218.0,214.0,218.0,214.0,218.0,214.0,218.0,218.0,215.0,217.0,218.0,215.0,215.0,214.0,218.0,218.0,218.0,214.0,218.0,215.0,218.0,218.0,215.0,218.0,218.0,218.0,218.0,218.0,214.0,218.0,218.0,215.0,217.0,214.0,217.0,218.0,215.0,218.0,214.0,217.0,214.0,217.0,214.0,217.0,214.0,218.0,218.0,215.0,218.0,214.0,218.0,214.0,217.0,214.0,218.0,218.0,215.0,218.0,215.0,218.0,215.0,218.0,218.0,215.0,218.0,215.0,218.0,218.0,215.0,218.0,218.0,215.0,215.0,214.0,214.0,217.0,218.0,218.0,215.0,218.0,218.0,218.0,218.0,218.0,218.0,215.0,218.0,215.0,218.0,215.0,218.0,215.0,218.0,218.0,215.0,218.0,214.0,214.0,218.0,218.0,218.0,214.0,218.0,214.0,217.0,214.0,218.0,218.0,215.0,218.0,215.0,218.0,214.0,218.0,215.0,218.0,218.0,215.0,218.0,214.0,217.0,214.0,218.0,214.0,218.0,218.0,215.0,218.0,214.0,218.0,218.0,218.0,218.0],"Casting_Pressure":[1037.0,1052.0,1037.0,1053.0,1054.0,1039.0,1053.0,1037.0,1052.0,1037.0,1053.0,1038.0,1038.0,1037.0,1037.0,1037.0,1053.0,1037.0,1053.0,1038.0,1053.0,1038.0,1053.0,1038.0,1051.0,1036.0,1052.0,1037.0,1052.0,1037.0,1052.0,1037.0,1053.0,1038.0,1052.0,1054.0,1038.0,1052.0,1037.0,1053.0,1037.0,1053.0,1037.0,1053.0,1038.0,1038.0,1038.0,1038.0,1038.0,1038.0,1037.0,1053.0,1053.0,1038.0,1052.0,1054.0,1039.0,1043.0,1048.0,1051.0,1036.0,1053.0,1055.0,1040.0,1039.0,1039.0,1039.0,1053.0,1038.0,1054.0,1055.0,1040.0,1045.0,1049.0,1034.0,1052.0,1037.0,1053.0,1037.0,1051.0,1054.0,1039.0,1039.0,1038.0,1054.0,1038.0,1053.0,1038.0,1053.0,1038.0,1053.0,1038.0,1054.0,1038.0,1053.0,1053.0,1053.0,1053.0,1053.0,1053.0,1054.0,1038.0,1053.0,1037.0,1052.0,1037.0,1054.0,1038.0,1053.0,1055.0,1040.0,1053.0,1055.0,1040.0,1053.0,1053.0,1054.0,1039.0,1053.0,1055.0,1039.0,1052.0,1037.0,1037.0,1038.0,1038.0,1052.0,1037.0,1052.0,1036.0,1053.0,1038.0,1053.0,1037.0,1053.0,1053.0,1055.0,1039.0,1052.0,1054.0,1038.0,1054.0,1038.0,1052.0,1053.0,1039.0,1052.0,1037.0,1053.0,1037.0,1054.0,1039.0,1053.0,1037.0,1054.0,1038.0,1053.0,1037.0,1053.0,1037.0,1053.0,1038.0,1054.0,1038.0,1051.0,1053.0,1038.0,1054.0,1038.0,1053.0,1038.0,1054.0,1038.0,1053.0,1055.0,1039.0,1049.0,1055.0,1042.0,1042.0,1038.0,1055.0,1055.0,1053.0,1038.0,1054.0,1039.0,1054.0,1056.0,1040.0,1054.0,1054.0,1054.0,1054.0,1054.0,1038.0,1054.0,1056.0,1040.0,1052.0,1037.0,1052.0,1054.0,1039.0,1053.0,1037.0,1052.0,1037.0,1052.0,1036.0,1052.0,1037.0,1053.0,1056.0,1040.0,1053.0,1038.0,1053.0,1038.0,1052.0,1037.0,1054.0,1056.0,1040.0,1054.0,1038.0,1054.0,1039.0,1053.0,1055.0,1040.0,1053.0,1038.0,1053.0,1055.0,1040.0,1053.0,1053.0,1040.0,1040.0,1037.0,1037.0,1052.0,1055.0,1055.0,1041.0,1053.0,1056.0,1055.0,1055.0,1053.0,1054.0,1039.0,1053.0,1039.0,1055.0,1039.0,1054.0,1039.0,1053.0,1055.0,1040.0,1053.0,1038.0,1038.0,1055.0,1055.0,1053.0,1037.0,1053.0,1037.0,1052.0,1037.0,1053.0,1055.0,1040.0,1055.0,1039.0,1053.0,1038.0,1054.0,1039.0,1054.0,1056.0,1040.0,1053.0,1038.0,1052.0,1037.0,1053.0,1038.0,1054.0,1055.0,1040.0,1053.0,1038.0,1054.0,1054.0,1053.0,1053.0],"Rapid_Rise_Time":[0.007,0.007,0.008,0.008,0.008,0.007,0.008,0.008,0.008,0.007,0.008,0.008,0.008,0.008,0.008,0.008,0.007,0.008,0.007,0.008,0.008,0.008,0.007,0.007,0.008,0.008,0.005,0.009,0.007,0.008,0.01,0.008,0.008,0.01,0.007,0.008,0.008,0.007,0.008,0.008,0.007,0.008,0.008,0.008,0.007,0.007,0.008,0.008,0.008,0.008,0.007,0.007,0.007,0.008,0.007,0.008,0.008,0.007,0.01,0.008,0.008,0.01,0.007,0.007,0.008,0.008,0.007,0.008,0.008,0.008,0.008,0.007,0.008,0.006,0.008,0.008,0.008,0.008,0.008,0.005,0.008,0.008,0.008,0.008,0.008,0.007,0.006,0.005,0.008,0.008,0.008,0.009,0.008,0.007,0.007,0.007,0.008,0.008,0.01,0.005,0.007,0.008,0.008,0.008,0.007,0.008,0.009,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.007,0.008,0.008,0.008,0.007,0.007,0.008,0.008,0.009,0.006,0.008,0.007,0.008,0.006,0.008,0.008,0.008,0.007,0.008,0.007,0.007,0.007,0.008,0.008,0.01,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.007,0.008,0.008,0.008,0.008,0.005,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.01,0.007,0.008,0.007,0.008,0.008,0.01,0.008,0.007,0.008,0.005,0.005,0.008,0.007,0.007,0.008,0.008,0.009,0.008,0.008,0.007,0.009,0.008,0.008,0.007,0.007,0.008,0.009,0.007,0.008,0.007,0.008,0.008,0.008,0.008,0.008,0.01,0.008,0.008,0.007,0.005,0.008,0.008,0.008,0.008,0.007,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.009,0.007,0.008,0.007,0.01,0.007,0.007,0.007,0.008,0.013,0.007,0.008,0.007,0.007,0.007,0.007,0.008,0.008,0.009,0.009,0.005,0.007,0.007,0.007,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.008,0.01,0.009,0.008,0.016,0.01,0.008,0.007,0.008,0.008,0.008,0.008,0.007,0.008,0.008,0.008,0.007,0.008,0.008,0.008,0.008,0.015,0.008,0.007,0.008,0.008,0.008,0.008,0.008,0.008,0.007,0.007,0.009,0.008,0.008,0.008,0.007,0.008,0.009,0.007,0.008,0.008,0.008,0.007,0.007],"Pressure_Rise_Time":[0.039,0.042,0.041,0.044,0.042,0.044,0.044,0.042,0.042,0.044,0.044,0.042,0.042,0.043,0.043,0.044,0.044,0.042,0.043,0.043,0.041,0.042,0.042,0.044,0.044,0.042,0.043,0.043,0.041,0.042,0.042,0.041,0.043,0.041,0.043,0.044,0.043,0.042,0.044,0.042,0.042,0.042,0.042,0.043,0.044,0.044,0.043,0.043,0.041,0.041,0.044,0.042,0.042,0.043,0.042,0.043,0.043,0.042,0.042,0.041,0.042,0.043,0.044,0.043,0.044,0.044,0.044,0.044,0.041,0.043,0.044,0.043,0.041,0.042,0.043,0.041,0.043,0.041,0.043,0.033,0.043,0.042,0.042,0.042,0.044,0.044,0.042,0.041,0.044,0.041,0.044,0.042,0.044,0.041,0.044,0.044,0.044,0.044,0.041,0.042,0.044,0.044,0.042,0.041,0.044,0.044,0.042,0.044,0.044,0.044,0.044,0.042,0.043,0.044,0.044,0.044,0.043,0.044,0.042,0.044,0.044,0.042,0.044,0.044,0.042,0.042,0.042,0.044,0.042,0.042,0.043,0.044,0.042,0.042,0.043,0.043,0.042,0.042,0.043,0.043,0.044,0.044,0.042,0.044,0.035,0.044,0.041,0.044,0.044,0.043,0.043,0.043,0.041,0.043,0.044,0.043,0.043,0.042,0.042,0.041,0.041,0.044,0.043,0.044,0.042,0.043,0.042,0.041,0.041,0.044,0.042,0.044,0.044,0.042,0.044,0.04,0.035,0.038,0.035,0.035,0.042,0.043,0.043,0.041,0.044,0.043,0.042,0.043,0.044,0.043,0.044,0.044,0.041,0.041,0.043,0.034,0.044,0.041,0.044,0.044,0.042,0.042,0.042,0.044,0.043,0.043,0.041,0.044,0.042,0.043,0.043,0.043,0.042,0.043,0.044,0.041,0.041,0.044,0.043,0.042,0.041,0.044,0.042,0.035,0.042,0.044,0.033,0.042,0.044,0.043,0.034,0.041,0.043,0.044,0.044,0.043,0.044,0.044,0.041,0.041,0.035,0.035,0.041,0.043,0.043,0.043,0.043,0.042,0.043,0.043,0.042,0.043,0.044,0.034,0.044,0.043,0.041,0.042,0.041,0.044,0.041,0.042,0.044,0.043,0.043,0.041,0.041,0.044,0.042,0.043,0.044,0.044,0.043,0.043,0.042,0.044,0.044,0.043,0.043,0.043,0.041,0.041,0.041,0.044,0.043,0.042,0.042,0.042,0.043,0.044,0.043,0.044,0.043,0.042,0.044,0.044,0.042,0.042,0.043,0.043],"Biscuit_Thickness":[22.0,11.0,11.0,11.0,11.0,10.0,11.0,11.0,11.0,11.0,11.0,12.0,12.0,11.0,11.0,12.0,11.0,11.0,11.0,11.0,11.0,11.0,11.0,11.0,10.0,10.0,11.0,11.0,11.0,12.0,11.0,11.0,12.0,12.0,12.0,11.0,12.0,12.0,12.0,11.0,12.0,11.0,11.0,12.0,11.0,11.0,12.0,12.0,11.0,11.0,11.0,12.0,12.0,12.0,11.0,12.0,11.0,11.0,11.0,11.0,11.0,12.0,12.0,12.0,11.0,11.0,11.0,11.0,11.0,11.0,12.0,12.0,11.0,12.0,11.0,11.0,11.0,12.0,12.0,11.0,12.0,11.0,11.0,11.0,12.0,12.0,12.0,11.0,12.0,13.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,11.0,11.0,12.0,12.0,12.0,12.0,11.0,12.0,12.0,12.0,12.0,11.0,12.0,12.0,11.0,13.0,12.0,12.0,12.0,13.0,12.0,12.0,11.0,11.0,11.0,12.0,12.0,12.0,12.0,12.0,10.0,12.0,12.0,12.0,11.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,13.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,11.0,12.0,12.0,11.0,11.0,11.0,10.0,11.0,10.0,10.0,11.0,10.0,11.0,11.0,10.0,10.0,5.0,1.0,1.0,0.0,0.0,12.0,12.0,12.0,12.0,11.0,12.0,12.0,11.0,11.0,11.0,11.0,11.0,11.0,11.0,12.0,12.0,12.0,12.0,12.0,11.0,12.0,11.0,12.0,11.0,11.0,11.0,12.0,11.0,12.0,11.0,12.0,11.0,12.0,12.0,12.0,11.0,12.0,12.0,12.0,11.0,11.0,12.0,12.0,17.0,12.0,12.0,12.0,12.0,11.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,11.0,12.0,12.0,12.0,12.0,11.0,11.0,11.0,12.0,12.0,11.0,11.0,12.0,12.0,12.0,12.0,11.0,13.0,12.0,12.0,11.0,11.0,11.0,11.0,11.0,11.0,11.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,11.0,12.0,11.0,12.0,11.0,12.0,12.0,12.0,11.0,11.0,11.0,11.0,11.0,12.0,12.0,12.0,12.0,11.0,11.0,11.0,11.0],"Clamping_Force":[253.0,254.0,253.0,253.0,254.0,253.0,253.0,253.0,253.0,253.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,253.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,255.0,255.0,254.0,254.0,254.0,254.0,254.0,255.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,253.0,253.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,253.0,254.0,253.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,253.0,254.0,253.0,254.0,254.0,253.0,253.0,254.0,254.0,254.0,253.0,253.0,253.0,254.0,253.0,254.0,254.0,254.0,253.0,254.0,253.0,253.0,254.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,254.0,254.0,253.0,253.0,253.0,254.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,253.0,251.0,251.0,251.0,258.0,258.0,258.0,257.0,258.0,257.0,257.0,257.0,257.0,257.0,257.0,257.0,257.0,257.0,255.0,257.0,257.0,257.0,257.0,257.0,257.0,255.0,257.0,257.0,257.0,257.0,255.0,255.0,257.0,257.0,255.0,257.0,257.0,257.0,255.0,257.0,255.0,255.0,255.0,255.0,257.0,257.0,255.0,257.0,255.0,255.0,255.0,255.0,255.0,255.0,257.0,255.0,255.0,257.0,255.0,255.0,255.0,255.0,257.0,257.0,255.0,255.0,255.0,255.0,255.0,255.0,255.0,255.0,254.0,254.0,255.0,254.0,254.0,254.0,255.0,255.0,255.0,255.0,255.0,255.0,254.0,255.0,255.0,257.0,257.0,255.0,255.0,255.0,255.0,255.0,255.0,255.0,255.0,255.0,254.0,255.0,255.0,255.0,254.0,254.0,255.0,255.0,255.0,255.0,255.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0,254.0],"Cycle_Time":[20.7,20.7,20.7,20.7,20.7,20.8,20.7,20.7,20.7,20.7,20.7,20.5,20.5,20.7,20.7,20.6,20.6,20.7,20.7,20.7,20.6,20.7,20.7,20.7,20.8,20.6,20.7,20.7,20.7,20.6,20.8,20.6,20.6,20.6,20.6,20.8,20.6,20.7,20.8,20.7,20.7,20.7,20.6,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.7,20.8,20.8,20.7,20.7,20.9,20.7,20.7,20.8,20.8,20.7,20.7,20.7,20.8,20.7,20.7,20.9,20.5,20.8,20.7,20.7,20.7,20.6,20.8,20.7,20.7,20.7,20.7,20.8,20.7,20.8,20.5,20.5,20.8,20.8,20.8,20.6,20.8,20.7,20.7,20.6,20.7,20.6,20.7,20.8,20.8,20.7,20.7,20.7,20.7,20.7,20.7,20.8,20.7,20.5,20.8,20.7,20.6,20.6,20.7,20.6,20.7,20.7,20.6,20.7,20.7,20.8,20.7,20.5,20.9,20.7,20.6,20.7,20.7,20.7,20.7,20.7,20.7,20.8,20.7,20.7,20.8,20.8,20.8,20.5,20.7,20.7,20.8,20.7,20.8,20.8,20.7,20.7,20.8,20.5,20.7,20.6,20.7,20.6,20.7,20.6,20.6,20.6,20.9,20.9,20.7,20.8,20.7,20.8,20.7,20.7,20.8,20.7,20.8,20.5,20.8,20.6,20.7,20.7,20.7,20.8,20.7,20.7,20.7,20.7,20.7,20.7,20.8,20.7,20.7,20.7,21.1,21.1,21.1,21.2,21.2,21.2,21.2,21.1,21.1,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.1,21.3,21.2,21.1,21.1,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.0,21.1,21.2,21.1,21.1,21.2,21.1,21.2,21.2,21.2,21.1,21.2,21.2,21.2,21.1,21.2,21.2,21.2,21.1,21.3,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.3,21.3,21.2,21.2,21.2,21.1,21.2,21.2,21.3,21.3,21.2,21.2,21.2,21.2,21.1,21.1,21.1,21.2,21.2,21.1,21.2,21.1,21.3,21.1,21.1,21.3,21.3,21.2,21.2,21.3,21.2,21.2,21.2,21.1,21.3,21.1,21.2,21.2,21.2,21.0,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.3,21.3,21.2,21.2,21.2,21.1,21.2,21.0,21.0,21.2,21.2],"Spray_Time":[7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.9,7.8,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.3,8.4,8.4,8.4,8.4,8.4,8.4,8.4,8.4,8.4,8.4,8.4,8.4,8.4],"Spray_1_Time":[0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8],"Spray_2_Time":[0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8],"Melting_Furnace_Temp":[700.5,700.5,700.5,702.3,702.3,704.0,704.0,704.0,705.5,705.5,705.5,706.9,706.9,706.9,708.4,708.4,708.4,709.7,709.7,709.7,711.1,711.1,711.1,712.4,712.4,712.4,713.6,713.6,713.6,714.7,714.7,715.7,715.7,715.7,716.0,716.0,716.0,716.0,716.0,716.0,716.0,716.0,716.0,715.9,715.9,715.9,715.0,715.0,715.0,714.0,714.0,714.0,712.7,712.7,712.7,711.4,711.4,709.8,709.8,709.8,707.9,707.9,707.9,705.8,705.8,705.8,703.8,703.8,703.8,701.7,701.7,701.7,699.5,699.5,699.5,697.2,697.2,697.2,694.9,694.9,694.9,692.5,692.5,690.2,690.2,690.2,688.2,688.2,688.2,686.2,686.2,686.2,684.4,684.4,684.4,682.7,682.7,682.7,680.8,680.8,680.8,679.3,679.3,679.3,678.1,678.1,678.1,676.9,676.9,676.9,676.0,676.0,675.2,675.2,675.2,675.0,675.0,675.0,675.0,675.0,675.0,675.5,675.5,675.5,676.4,676.4,676.4,677.5,677.5,677.5,678.8,678.8,678.8,680.3,680.3,680.3,682.4,682.4,684.2,684.2,684.2,686.2,686.2,686.2,688.3,688.3,688.3,690.3,690.3,690.3,692.2,692.2,692.2,694.1,694.1,694.1,695.7,695.7,695.7,697.4,697.4,697.4,698.7,698.7,700.3,700.3,700.3,701.6,701.6,701.6,703.1,703.1,703.1,704.5,704.5,704.5,706.0,706.0,706.0,679.3,679.3,677.2,677.2,677.2,675.3,675.3,675.3,673.6,673.6,672.3,672.3,672.3,671.2,671.2,671.2,671.0,671.0,671.0,671.0,671.0,671.0,671.5,671.5,671.5,672.4,672.4,673.4,673.4,673.4,674.8,674.8,674.8,676.4,676.4,676.4,678.2,678.2,678.2,679.7,679.7,681.6,681.6,681.6,683.4,683.4,683.4,685.2,685.2,685.2,687.1,687.1,687.1,689.0,689.0,689.0,690.5,690.5,691.8,691.8,691.8,692.9,692.9,692.9,694.0,694.0,694.0,695.1,695.1,695.1,696.1,696.1,696.1,697.0,697.0,697.4,697.4,697.4,698.0,698.0,698.0,698.9,698.9,698.9,699.7,699.7,699.7,700.6,700.6,700.6,701.3,701.3,702.1,702.1,702.1,703.1,703.1,703.1,704.2,704.2,704.2,705.1,705.1,705.1,706.0,706.0,706.0,706.9,706.9,707.9,707.9,707.9,708.5,708.5,708.5,709.1,709.1,709.1,710.0,710.0,710.0],"Air_Pressure":[6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.3,6.3,6.3,6.2,6.2,6.2,6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.4,6.4,6.4,6.4,6.4,6.4,6.5,6.5,6.5,6.5,6.5,6.5,6.5,6.5,6.5,6.6,6.6,6.6,6.6,6.6,6.6,6.7,6.7,6.7,6.7,6.7,6.7,6.7,6.7,6.7,6.7,6.7,6.7,6.7,6.7,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.8,6.8,6.8,6.7,6.7,6.7,6.7,6.7,6.7,5.7,5.7,5.8,5.8,5.8,5.8,5.8,5.8,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,6.0,6.0,6.0,6.0,6.0,6.0,6.1,6.1,6.1,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,5.9,5.9,5.8,5.8,5.8,5.8,5.8,5.8,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,5.9,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.1,6.1,6.1,6.1,6.1,6.3,6.3,6.3,6.4,6.4,6.4,6.5,6.5,6.5,6.7,6.7,6.7],"Coolant_Temp":[26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.5,26.6,26.6,26.6,26.6,26.6,26.5,26.5,26.5,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.5,26.5,26.5,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.6,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.7,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8,26.8],"Coolant_Pressure":[2.74,2.74,2.74,2.76,2.76,2.75,2.75,2.75,2.77,2.77,2.77,2.75,2.75,2.75,2.74,2.74,2.74,2.77,2.77,2.77,2.77,2.77,2.77,2.73,2.73,2.73,2.76,2.76,2.76,2.72,2.72,2.76,2.76,2.76,2.76,2.76,2.76,2.72,2.72,2.72,2.77,2.77,2.77,2.76,2.76,2.76,2.76,2.76,2.76,2.72,2.72,2.72,2.76,2.76,2.76,2.73,2.73,2.75,2.75,2.75,2.76,2.76,2.76,2.75,2.75,2.75,2.78,2.78,2.78,2.75,2.75,2.75,2.72,2.72,2.72,2.71,2.71,2.71,2.76,2.76,2.76,2.73,2.73,2.74,2.74,2.74,2.74,2.74,2.74,2.75,2.75,2.75,2.76,2.76,2.76,2.75,2.75,2.75,2.74,2.74,2.74,2.75,2.75,2.75,2.76,2.76,2.76,2.76,2.76,2.76,2.74,2.74,2.77,2.77,2.77,2.76,2.76,2.76,2.76,2.76,2.76,2.73,2.73,2.73,2.76,2.76,2.76,2.77,2.77,2.77,2.71,2.71,2.71,2.73,2.73,2.73,2.75,2.75,2.75,2.75,2.75,2.74,2.74,2.74,2.76,2.76,2.76,2.76,2.76,2.76,2.76,2.76,2.76,2.75,2.75,2.75,2.75,2.75,2.75,2.74,2.74,2.74,2.76,2.76,2.76,2.76,2.76,2.75,2.75,2.75,2.75,2.75,2.75,2.74,2.74,2.74,2.74,2.74,2.74,2.74,2.74,2.73,2.73,2.73,2.74,2.74,2.74,2.74,2.74,2.73,2.73,2.73,2.72,2.72,2.72,2.73,2.73,2.73,2.74,2.74,2.74,2.72,2.72,2.72,2.72,2.72,2.72,2.72,2.72,2.73,2.73,2.73,2.74,2.74,2.74,2.74,2.74,2.74,2.74,2.74,2.74,2.74,2.74,2.73,2.73,2.73,2.76,2.76,2.76,2.73,2.73,2.73,2.72,2.72,2.72,2.73,2.73,2.74,2.74,2.74,2.75,2.75,2.75,2.73,2.73,2.73,2.73,2.73,2.73,2.74,2.74,2.74,2.73,2.73,2.74,2.74,2.74,2.75,2.75,2.75,2.74,2.74,2.74,2.74,2.74,2.74,2.73,2.73,2.73,2.75,2.75,2.71,2.71,2.71,2.73,2.73,2.73,2.75,2.75,2.75,2.76,2.76,2.76,2.75,2.75,2.75,2.74,2.74,2.75,2.75,2.75,2.73,2.73,2.73,2.72,2.72,2.72,2.72,2.72,2.72],"Factory_Temp":[32.4,32.4,32.4,32.3,32.3,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.3,32.3,32.3,32.3,32.3,32.3,32.2,32.2,32.2,32.2,32.2,32.2,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.2,32.2,32.2,32.2,32.2,32.2,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.0,32.0,32.0,32.0,32.0,32.0,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.2,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.1,32.2,32.2,32.2,32.2,32.2,32.2,32.1,32.1,32.1,32.1,32.1,32.2,32.2,32.2,32.3,32.3,32.3,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.5,32.4,32.4,32.4,32.4,32.4,32.4,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.4,32.4,32.4,32.5,32.5,32.5,32.5,32.5,32.5,32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.4,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.3,32.2,32.2,32.2,32.2,32.2,32.2,32.1,32.1,32.1,32.1,32.1,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0,32.0],"Factory_Humidity":[60.5,60.5,60.5,60.7,60.7,60.9,60.9,60.9,61.1,61.1,61.1,61.2,61.2,61.2,61.4,61.4,61.4,61.4,61.4,61.4,61.6,61.6,61.6,61.7,61.7,61.7,61.9,61.9,61.9,61.9,61.9,61.9,61.9,61.9,61.9,61.9,61.9,62.0,62.0,62.0,62.1,62.1,62.1,62.1,62.1,62.1,62.2,62.2,62.2,62.3,62.3,62.3,62.5,62.5,62.5,62.6,62.6,62.7,62.7,62.7,62.7,62.7,62.7,62.7,62.7,62.7,62.6,62.6,62.6,62.6,62.6,62.6,62.6,62.6,62.6,62.5,62.5,62.5,62.4,62.4,62.4,62.3,62.3,62.4,62.4,62.4,62.5,62.5,62.5,62.5,62.5,62.5,62.6,62.6,62.6,62.5,62.5,62.5,62.3,62.3,62.3,62.3,62.3,62.3,62.3,62.3,62.3,62.2,62.2,62.2,62.1,62.1,62.1,62.1,62.1,62.1,62.1,62.1,62.2,62.2,62.2,62.4,62.4,62.4,62.6,62.6,62.6,62.7,62.7,62.7,62.6,62.6,62.6,62.5,62.5,62.5,62.4,62.4,62.5,62.5,62.5,62.5,62.5,62.5,62.4,62.4,62.4,62.2,62.2,62.2,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,61.9,61.9,61.9,61.8,61.8,61.7,61.7,61.7,61.6,61.6,61.6,61.7,61.7,61.7,61.8,61.8,61.8,61.9,61.9,61.9,62.0,62.0,61.9,61.9,61.9,62.0,62.0,62.0,62.1,62.1,62.2,62.2,62.2,62.1,62.1,62.1,61.9,61.9,61.9,61.6,61.6,61.6,61.6,61.6,61.6,61.8,61.8,61.8,61.8,61.8,61.6,61.6,61.6,61.7,61.7,61.7,61.9,61.9,61.9,61.9,61.9,62.0,62.0,62.0,62.0,62.0,62.0,62.1,62.1,62.1,62.0,62.0,62.0,61.9,61.9,61.9,61.9,61.9,62.1,62.1,62.1,62.0,62.0,62.0,62.1,62.1,62.1,62.1,62.1,62.1,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.1,62.1,62.1,62.2,62.2,62.2,62.2,62.2,62.2,62.1,62.1,62.1,62.1,62.1,62.2,62.2,62.2,62.2,62.2,62.2,62.3,62.3,62.3,62.4,62.4,62.4,62.5,62.5,62.6,62.6,62.6,62.7,62.7,62.7,62.9,62.9,62.9,63.0,63.0,63.0]}},"alarms":[{"at":812,"shot":897,"level":"log","rule":"shift_Air_Pressure","title":"공기압 급변","message":"값 6.4 (직전 50 shot 중앙값에서 3.5σ 넘게 벗어남)","release_at":null},{"at":809,"shot":894,"level":"log","rule":"shift_Casting_Pressure","title":"주조 압력 급변","message":"값 1037.0 (직전 50 shot 중앙값에서 3.5σ 넘게 벗어남)","release_at":null},{"at":789,"shot":874,"level":"log","rule":"shift_Casting_Pressure","title":"주조 압력 급변","message":"값 1037.0 (직전 50 shot 중앙값에서 3.5σ 넘게 벗어남)","release_at":null},{"at":774,"shot":859,"level":"critical","rule":"defect_cusum_up","title":"불량률 CUSUM 경보","message":"불량률 상측 누적합이 h=8를 넘었다. 다음 50 shot 전수검사로 전환","release_at":824},{"at":753,"shot":838,"level":"log","rule":"shift_Casting_Pressure","title":"주조 압력 급변","message":"값 1038.0 (직전 50 shot 중앙값에서 3.5σ 넘게 벗어남)","release_at":null},{"at":744,"shot":829,"level":"log","rule":"shift_Biscuit_Thickness","title":"비스킷 두께 급변","message":"값 17.0 (직전 50 shot 중앙값에서 3.5σ 넘게 벗어남)","release_at":null},{"at":742,"shot":827,"level":"info","rule":"defect_cusum_down","title":"불량률 감소 감지","message":"불량률 하측 누적합이 h=8를 넘었다(불량률이 기준보다 낮아짐)","release_at":null},{"at":721,"shot":806,"level":"log","rule":"shift_Casting_Pressure","title":"주조 압력 급변","message":"값 1037.0 (직전 50 shot 중앙값에서 3.5σ 넘게 벗어남)","release_at":null}]}</script>
+<script>
+(() => {
+  "use strict";
+  const D = JSON.parse(document.getElementById("data").textContent);
+  const W = D.w, N = W.i.length, LAST = N - 1;
+
+  /* ---------- 문구 사전 ---------- */
+  const DICT = {
+    ko: {
+      lamp: "재생 중", "ro.shot": "shot", "ro.elapsed": "경과 (사이클 누적)", "th.light": "밝게", "th.dark": "어둡게",
+      crumbs: ["제품 유형 1", "캐비티 2", "구간 {run}", "재생 {i} / {n}"],
+      "andon.crit": "경고", "andon.msg": "불량률 CUSUM 경보", "andon.detail": "shot {shot} · 전수검사 중 · 남은 {left} shot", "andon.ok": "정상 운전",
+      "btn.act": "조치 보기", "btn.ack": "확인",
+      "s.rate": "최근 50 shot 불량률", "s.rate.sub": "한계 {ucl}", "s.cum": "누적 불량", "s.cum.unit": "개", "s.cusum": "CUSUM 상측", "s.cusum.sub": "경보 h = {h}",
+      "s.cav": "캐비티 1 · 2", "s.cav.sub": "최근 300 shot 불량률", "s.cyc": "평균 사이클", "s.cyc.sub": "최근 50 shot",
+      "tip.s.rate": "최근 50 shot(제품 100개)의 불량률. 표본이 작으면 관리한계를 실제 표본 수로 다시 계산한다.",
+      "tip.s.cum": "재생을 시작한 뒤 불량으로 판정된 제품 수와 비율.",
+      "tip.s.cusum": "불량률이 기준보다 조금씩 오르는 것을 누적해 잡는 경보. k = 0.25, h = 8 (보고서 9장).",
+      "tip.s.cav": "같은 기간 캐비티별 불량률. 캐비티 1이 꾸준히 높다 (보고서 9.1절).",
+      "tip.s.cyc": "shot 한 번에 걸린 시간의 평균. 재생 시계는 이 값을 누적해 만든다.",
+      "p.title": "불량률 관리도", "p.meta": "p-chart · 50 shot 부분군", "lg.rate": "부분군 불량률", "lg.limits": "중심선 · 관리한계", "lg.up": "한계 위 (증가)", "lg.down": "한계 아래 (감소)",
+      "tip.p": "50 shot(제품 100개)마다 불량률을 찍는다. 중심선은 재생 시작 전 기준 기간이다.",
+      "imr.title": "{v} 관리도", "imr.meta": "I-MR · 최근 100 shot", "lg.r1": "3σ 밖", "lg.r2": "9 shot 연속 한쪽",
+      "tip.imr": "위: shot마다 값(I). 아래: 직전 shot과의 차이(MR). 회색 띠는 ±1σ·±2σ 구역, 빨강은 관리한계 밖, 주황은 중심선 한쪽에 9 shot 연속(Nelson 규칙 2).",
+      "dist.title": "{v} 분포와 현재 위치", "dist.meta": "최근 200 shot", "lg.now": "이번 shot", "lg.mean": "평균 · ±3σ", "lg.band": "관리 범위(안)",
+      "tip.dist": "최근 200 shot의 히스토그램과 같은 평균·표준편차의 정규곡선. 파란 선이 이번 shot의 값, 파란 띠는 관리 범위(안, 보고서 7장).",
+      "kv.mean": "평균", "kv.sd": "표준편차", "kv.now": "이번 shot", "kv.z": "위치 z", "kv.out": "범위 밖", "kv.none": "–",
+      "al.title": "알람", "al.logs": "공정 변수 급변 기록 {n}건은 알람 센터에 모았다", "tip.al": "운영자 화면에는 경고·주의·정보만 보인다. 급변 같은 기록은 알람 센터로 (ISA-18.2: 우선순위 3~4단계).",
+      "pl.title": "공정 변수", "pl.meta": "막대 = −3σ ~ +3σ, ▲ = 이번 shot",
+      "tip.pl": "값, 최근 50 shot 추세, 최근 200 shot 분포 안에서의 위치. 단위는 공식 자료에 없어 값 범위로 추정했다. 누르면 위 관리도와 분포가 이 변수로 바뀐다.",
+      "pa.title": "불량 유형", "tip.pa": "최근 300 shot에서 불량으로 판정된 제품의 유형별 개수.", "w300": "최근 300 shot",
+      "cv.title": "캐비티별 불량률", "tip.cv": "같은 300 shot에서 캐비티별 불량률. 원인 후보로 금형 상태를 먼저 본다.", "cav": "캐비티 {c}",
+      "chip.out": "범위 밖", "chip.sig": "3σ 밖",
+      levels: { critical: "경고", warning: "주의", info: "정보", log: "기록" },
+      rules: { defect_cusum_up: "불량률 CUSUM 경보", defect_cusum_down: "불량률 감소 감지", shift: "{v} 급변", range: "{v} 범위(안) 밖 운전" },
+      types: { short_shot: "미성형", exfoliation: "박리", porosity: "기공", deformation: "변형", other: "기타" },
+      tt: { rate: "불량률", ucl: "관리한계", value: "값", count: "shot 수", mr: "MR" },
+    },
+    en: {
+      lamp: "Running", "ro.shot": "Shot", "ro.elapsed": "Elapsed (cycle sum)", "th.light": "Light", "th.dark": "Dark",
+      crumbs: ["Product type 1", "2 cavities", "Run {run}", "Replay {i} / {n}"],
+      "andon.crit": "Alarm", "andon.msg": "Defect-rate CUSUM alarm", "andon.detail": "shot {shot} · 100% inspection · {left} shots left", "andon.ok": "Normal",
+      "btn.act": "View actions", "btn.ack": "Acknowledge",
+      "s.rate": "Defect rate, last 50", "s.rate.sub": "Limit {ucl}", "s.cum": "Cumulative defects", "s.cum.unit": "parts", "s.cusum": "Upper CUSUM", "s.cusum.sub": "Alarm at h = {h}",
+      "s.cav": "Cavity 1 · 2", "s.cav.sub": "Defect rate, last 300", "s.cyc": "Mean cycle", "s.cyc.sub": "Last 50 shots",
+      "tip.s.rate": "Defect rate of the last 50 shots (100 parts). With a small sample the limit is recomputed from the actual sample size.",
+      "tip.s.cum": "Parts judged defective since the replay started.",
+      "tip.s.cusum": "Accumulates small upward shifts in the defect rate. k = 0.25, h = 8 (report ch. 9).",
+      "tip.s.cav": "Defect rate per cavity over the same shots. Cavity 1 runs higher throughout (report 9.1).",
+      "tip.s.cyc": "Mean time per shot. The replay clock is the running sum of this value.",
+      "p.title": "Defect-rate control chart", "p.meta": "p-chart · subgroups of 50 shots", "lg.rate": "Subgroup rate", "lg.limits": "Center · limits", "lg.up": "Above limit (worse)", "lg.down": "Below limit (better)",
+      "tip.p": "One point per 50 shots (100 parts). The center line comes from the reference period before the replay.",
+      "imr.title": "{v} control chart", "imr.meta": "I-MR · last 100 shots", "lg.r1": "Beyond 3σ", "lg.r2": "9 in a row on one side",
+      "tip.imr": "Top: value per shot (I). Bottom: change from the previous shot (MR). Gray bands are the ±1σ and ±2σ zones; red is outside the limits, amber is 9 shots in a row on one side (Nelson rule 2).",
+      "dist.title": "{v}: distribution and position", "dist.meta": "Last 200 shots", "lg.now": "This shot", "lg.mean": "Mean · ±3σ", "lg.band": "Operating range (draft)",
+      "tip.dist": "Histogram of the last 200 shots with a normal curve of the same mean and SD. The blue line is this shot; the blue band is the draft operating range (report ch. 7).",
+      "kv.mean": "Mean", "kv.sd": "SD", "kv.now": "This shot", "kv.z": "z", "kv.out": "Out of range", "kv.none": "–",
+      "al.title": "Alarms", "al.logs": "{n} sudden-change log entries are in the Alarm center", "tip.al": "Operators see alarms, cautions and info only. Logs such as sudden changes go to the Alarm center (ISA-18.2: 3–4 priorities).",
+      "pl.title": "Process variables", "pl.meta": "bar = −3σ to +3σ, ▲ = this shot",
+      "tip.pl": "Value, 50-shot trend and position within the last 200 shots. Units are not in the source data and are estimated from the value ranges. Select a tile to load it into the charts above.",
+      "pa.title": "Defect types", "tip.pa": "Defective parts by type over the last 300 shots.", "w300": "Last 300 shots",
+      "cv.title": "Defect rate by cavity", "tip.cv": "Defect rate per cavity over the same 300 shots. Check the die first.", "cav": "Cavity {c}",
+      "chip.out": "Out of range", "chip.sig": "Beyond 3σ",
+      levels: { critical: "Alarm", warning: "Caution", info: "Info", log: "Log" },
+      rules: { defect_cusum_up: "Defect-rate CUSUM alarm", defect_cusum_down: "Defect-rate decrease", shift: "{v} sudden change", range: "{v} outside draft range" },
+      msgs: { defect_cusum_up: "Upper CUSUM passed h = 8. The next 50 shots switch to 100% inspection.", defect_cusum_down: "Lower CUSUM passed h = 8: the defect rate is below the baseline.",
+        shift: "The value moved more than 3.5σ from the median of the previous 50 shots.", range: "Most of the last 20 shots ran outside the draft range." },
+      types: { short_shot: "Short shot", exfoliation: "Exfoliation", porosity: "Porosity", deformation: "Deformation", other: "Other" },
+      tt: { rate: "Defect rate", ucl: "Limit", value: "Value", count: "Shots", mr: "MR" },
+    },
+  };
+  const VARS = {
+    Velocity_1: ["1단 사출 속도", "Velocity 1", "m/s", 3], Velocity_2: ["2단 사출 속도", "Velocity 2", "m/s", 3], Velocity_3: ["3단 사출 속도", "Velocity 3", "m/s", 3],
+    High_Velocity: ["고속 사출 속도", "High velocity", "m/s", 3], Cylinder_Pressure: ["실린더 압력", "Cylinder pressure", "bar", 0], Casting_Pressure: ["주조 압력", "Casting pressure", "bar", 0],
+    Rapid_Rise_Time: ["고속 상승 시간", "Rapid rise time", "s", 3], Pressure_Rise_Time: ["증압 상승 시간", "Pressure rise time", "s", 3], Biscuit_Thickness: ["비스킷 두께", "Biscuit thickness", "mm", 0],
+    Clamping_Force: ["형체력", "Clamping force", "t", 0], Cycle_Time: ["사이클 타임", "Cycle time", "s", 1], Spray_Time: ["스프레이 시간", "Spray time", "s", 1],
+    Spray_1_Time: ["스프레이 1 시간", "Spray 1 time", "s", 1], Spray_2_Time: ["스프레이 2 시간", "Spray 2 time", "s", 1], Melting_Furnace_Temp: ["용탕 온도", "Melt temperature", "℃", 1],
+    Air_Pressure: ["공기압", "Air pressure", "bar", 1], Coolant_Temp: ["냉각수 온도", "Coolant temperature", "℃", 1], Coolant_Pressure: ["냉각수 압력", "Coolant pressure", "bar", 2],
+    Factory_Temp: ["공장 온도", "Factory temperature", "℃", 1], Factory_Humidity: ["공장 습도", "Factory humidity", "%", 1],
+  };
+  const PLATES = ["Casting_Pressure", "High_Velocity", "Velocity_3", "Cylinder_Pressure", "Clamping_Force", "Biscuit_Thickness", "Cycle_Time", "Melting_Furnace_Temp", "Coolant_Temp", "Air_Pressure"];
+  const TYPES = ["short_shot", "exfoliation", "porosity", "deformation", "other"];
+  const TYPE_VAR = { short_shot: "--t-short", exfoliation: "--t-exf", porosity: "--t-por", deformation: "--t-def", other: "--t-oth" };
+  const ICON = {
+    critical: '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.2 1h5.6L15 5.2v5.6L10.8 15H5.2L1 10.8V5.2zM7.2 4v5h1.6V4zm0 6.2V12h1.6v-1.8z"/></svg>',
+    warning: '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1l7.5 13.5h-15zM7.2 6v4.2h1.6V6zm0 5.3V13h1.6v-1.7z"/></svg>',
+    info: '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1a7 7 0 110 14A7 7 0 018 1zm-.8 6v5h1.6V7zm0-3v1.7h1.6V4z"/></svg>',
+    log: '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M3 1h7l3 3v11H3zm2 6v1.4h6V7zm0 3v1.4h6V10z"/></svg>',
+  };
+
+  /* ---------- 상태 ---------- */
+  const params = new URLSearchParams(location.search);
+  const state = { lang: params.get("lang") === "en" ? "en" : "ko", v: "Casting_Pressure", open: null };
+  const L = () => DICT[state.lang];
+  const fmt = (s, o = {}) => String(s).replace(/\{(\w+)\}/g, (_, k) => (k in o ? o[k] : `{${k}}`));
+  const vName = (v) => VARS[v][state.lang === "ko" ? 0 : 1];
+  const num = (x, d = 0) => (x == null || Number.isNaN(x) ? "–" : Number(x).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }));
+  const pct = (x, d = 1) => (x == null ? "–" : `${(x * 100).toFixed(d)}%`);
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const lab = (k) => `${W.run[k]}·${W.shot[k]}`;
+
+  /* ---------- 통계 ---------- */
+  const Stats = {
+    mean: (a) => a.reduce((s, x) => s + x, 0) / a.length,
+    sd(a) { const m = this.mean(a); return Math.sqrt(a.reduce((s, x) => s + (x - m) ** 2, 0) / (a.length - 1)); },
+    pdf: (x, m, s) => Math.exp(-0.5 * ((x - m) / s) ** 2) / (s * Math.sqrt(2 * Math.PI)),
+    quantile(a, q) { const b = [...a].sort((x, y) => x - y), p = (b.length - 1) * q, lo = Math.floor(p); return b[lo] + (b[Math.ceil(p)] - b[lo]) * (p - lo); },
+    /** 값 종류가 적으면 값마다 막대, 많으면 Freedman–Diaconis 구간. */
+    bins(a) {
+      const u = [...new Set(a)].sort((x, y) => x - y);
+      if (u.length <= 30) {
+        let step = Infinity;
+        for (let k = 1; k < u.length; k++) step = Math.min(step, u[k] - u[k - 1]);
+        if (!Number.isFinite(step)) step = Math.abs(u[0]) * 0.02 || 1;
+        return { step, bins: u.map((v) => ({ a: v - step * 0.42, b: v + step * 0.42, c: a.filter((x) => x === v).length })) };
+      }
+      const iqr = this.quantile(a, 0.75) - this.quantile(a, 0.25), mn = Math.min(...a), mx = Math.max(...a);
+      const h = Math.max(2 * iqr * a.length ** (-1 / 3), (mx - mn) / 30), n = Math.min(30, Math.max(8, Math.ceil((mx - mn) / h))), w = (mx - mn) / n;
+      const bins = Array.from({ length: n }, (_, k) => ({ a: mn + k * w, b: mn + (k + 1) * w, c: 0 }));
+      a.forEach((x) => { bins[Math.min(n - 1, Math.floor((x - mn) / w))].c += 1; });
+      return { step: w, bins: bins.map((b) => ({ ...b, a: b.a + w * 0.04, b: b.b - w * 0.04 })) };
+    },
+  };
+  /** 변수 하나의 최근 기준 분포와 이번 shot 위치. */
+  function profile(v) {
+    const xs = D.w.x[v], ref = xs.slice(-201, -1), now = xs[LAST];
+    const m = Stats.mean(ref), s = Stats.sd(ref), z = s > 0 ? (now - m) / s : 0;
+    const r = D.ranges[v];
+    const inRange = (x) => !r || ((r.low == null || x >= r.low) && (r.high == null || x <= r.high));
+    return { xs, ref, now, m, s, z, r, out: r ? ref.filter((x) => !inRange(x)).length / ref.length : null, nowOut: !inRange(now) };
+  }
+
+  /* ---------- 도움말 ? ---------- */
+  function mountHelp() {
+    document.querySelectorAll(".help").forEach((h, k) => {
+      const id = `tip-${k}`;
+      h.innerHTML = `<button type="button" aria-label="?" aria-expanded="false" aria-describedby="${id}">?</button><span class="tip${h.dataset.align === "right" ? " right" : ""}" role="tooltip" id="${id}" hidden></span>`;
+      const b = h.firstElementChild, tip = h.lastElementChild;
+      const show = (on) => { tip.hidden = !on; b.setAttribute("aria-expanded", String(on)); };
+      b.addEventListener("mouseenter", () => show(true));
+      b.addEventListener("mouseleave", () => show(false));
+      b.addEventListener("focus", () => show(true));
+      b.addEventListener("blur", () => show(false));
+      b.addEventListener("click", () => show(tip.hidden));
+      h.addEventListener("keydown", (e) => { if (e.key === "Escape") show(false); });
+    });
+  }
+  function helpText() {
+    document.querySelectorAll(".help").forEach((h) => { h.querySelector(".tip").textContent = L()[h.dataset.tip] || ""; });
+  }
+  const helpHtml = (key, right) => `<span class="help" data-tip="${key}"${right ? ' data-align="right"' : ""}></span>`;
+
+  /* ---------- 작은 SVG ---------- */
+  function spark(values, { w = 200, h = 26, color, endColor } = {}) {
+    const mn = Math.min(...values), mx = Math.max(...values), span = mx - mn || 1;
+    const pts = values.map((v, k) => [(k / (values.length - 1)) * (w - 4) + 2, h - 3 - ((v - mn) / span) * (h - 6)]);
+    const d = pts.map((p, k) => `${k ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("");
+    const e = pts[pts.length - 1];
+    return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}L${e[0]},${h}L2,${h}Z" fill="${color}" opacity=".10"/><path d="${d}" fill="none" stroke="${color}" stroke-width="1.1" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="M${e[0]} ${e[1]}l0 0" stroke="${endColor}" stroke-width="5.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
+  }
+  /** −3σ~+3σ 막대에 이번 shot 위치(▲)와 관리 범위 경계. */
+  function sigmaBar(p) {
+    const w = 200, h = 16, x = (z) => 6 + ((Math.max(-3.4, Math.min(3.4, z)) + 3.4) / 6.8) * (w - 12);
+    const zr = (v) => (p.s > 0 ? (v - p.m) / p.s : 0);
+    let edge = "";
+    if (p.r) for (const v of [p.r.low, p.r.high]) if (v != null && Math.abs(zr(v)) < 3.4) edge += `<line x1="${x(zr(v))}" x2="${x(zr(v))}" y1="1" y2="10" stroke="${css("--accent-ink")}" stroke-width="1.5"/>`;
+    const mk = x(p.z), col = Math.abs(p.z) > 3 ? css("--crit") : css("--ink");
+    return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true">
+      <rect x="${x(-3)}" y="3" width="${x(3) - x(-3)}" height="6" rx="1" fill="${css("--zone-2")}"/>
+      <rect x="${x(-2)}" y="3" width="${x(2) - x(-2)}" height="6" fill="${css("--zone-1")}"/>
+      <rect x="${x(-1)}" y="3" width="${x(1) - x(-1)}" height="6" fill="${css("--zone-1")}"/>
+      <line x1="${x(0)}" x2="${x(0)}" y1="2" y2="10" stroke="${css("--ink-3")}" stroke-width="1"/>${edge}
+      <path d="M${mk} 9 l4.5 6.5 h-9 z" fill="${col}"/></svg>`;
+  }
+
+  /* ---------- 화면 조각 ---------- */
+  function renderBar() {
+    const t = L();
+    document.getElementById("crumbs").innerHTML = t.crumbs.map((c) => `<span>${esc(fmt(c, { run: D.run, i: num(D.at + 1), n: num(D.n) }))}</span>`).join("");
+    document.getElementById("ro-shot").textContent = `${D.run}·${D.shot}`;
+    const s = Math.round(D.clock_s), hh = String(Math.floor(s / 3600)).padStart(2, "0"), mm = String(Math.floor((s % 3600) / 60)).padStart(2, "0"), ss = String(s % 60).padStart(2, "0");
+    document.getElementById("ro-clock").textContent = `${hh}:${mm}:${ss}`;
+    document.getElementById("lang-ko").setAttribute("aria-pressed", String(state.lang === "ko"));
+    document.getElementById("lang-en").setAttribute("aria-pressed", String(state.lang === "en"));
+    const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    document.getElementById("th-light").setAttribute("aria-pressed", String(!dark));
+    document.getElementById("th-dark").setAttribute("aria-pressed", String(dark));
+  }
+  function renderAndon() {
+    const t = L(), a = D.alarms.find((x) => x.level === "critical" && x.release_at != null && x.release_at > D.at);
+    const el = document.getElementById("andon");
+    if (!a) { el.className = "andon ok"; el.innerHTML = `<span class="lamp"><i></i>${t["andon.ok"]}</span>`; return; }
+    el.className = "andon";
+    el.innerHTML = `<span class="chip critical">${ICON.critical}${t["andon.crit"]}</span>
+      <span class="msg">${t["andon.msg"]} <span>· ${esc(fmt(t["andon.detail"], { shot: `${D.run}·${a.shot}`, left: a.release_at - D.at }))}</span></span>
+      <span class="act"><button type="button" class="btn primary">${t["btn.act"]}</button><button type="button" class="btn">${t["btn.ack"]}</button></span>`;
+  }
+  function renderStats() {
+    const t = L(), ys = W.y, last50 = ys.slice(-50).flat(), rate = Stats.mean(last50);
+    const c = D.pchart.center, ucl = c + 3 * Math.sqrt((c * (1 - c)) / last50.length);
+    const roll = []; for (let k = 49; k < N; k++) roll.push(Stats.mean(ys.slice(k - 49, k + 1).flat()));
+    const cu = W.cu[LAST], h = D.cusum.h;
+    const cav = [0, 1].map((j) => Stats.mean(ys.map((p) => p[j])));
+    const cyc = Stats.mean(W.x.Cycle_Time.slice(-50));
+    const cell = (key, val, sub, extra = "") => `<div class="stat"><span class="label">${t[key]}${helpHtml("tip." + key, key === "s.cyc")}</span><span class="val">${val}</span>${extra}<span class="sub">${sub}</span></div>`;
+    document.getElementById("stats").innerHTML = [
+      cell("s.rate", pct(rate), fmt(t["s.rate.sub"], { ucl: pct(ucl) }), spark(roll, { color: css("--spark"), endColor: rate > ucl ? css("--crit") : css("--ink") })),
+      cell("s.cum", `${num(D.defects)}<small>/ ${num(D.parts)}</small>`, pct(D.defects / D.parts)),
+      cell("s.cusum", num(Math.max(0, cu), 1), `<span class="meter${cu >= h ? " hot" : ""}"><i style="width:${Math.min(100, (Math.max(0, cu) / h) * 100)}%"></i></span>${fmt(t["s.cusum.sub"], { h })}`),
+      cell("s.cav", `${pct(cav[0])}<small>· ${pct(cav[1])}</small>`, t["s.cav.sub"]),
+      cell("s.cyc", `${num(cyc, 2)}<small>s</small>`, t["s.cyc.sub"]),
+    ].join("");
+  }
+  function renderAlarms() {
+    const t = L(), shown = D.alarms.filter((a) => a.level !== "log"), logs = D.alarms.length - shown.length;
+    const title = (a) => {
+      const [kind, ...rest] = a.rule.split("_"), v = rest.join("_");
+      if (t.rules[a.rule]) return t.rules[a.rule];
+      return VARS[v] ? fmt(t.rules[kind] || a.title, { v: vName(v) }) : a.title;
+    };
+    document.getElementById("alist").innerHTML = shown.map((a, k) => `<li><button type="button" class="arow" aria-expanded="${state.open === k}" data-k="${k}">
+        <span class="chip ${a.level}">${ICON[a.level]}${t.levels[a.level]}</span><span class="t">${esc(title(a))}</span><span class="s">${D.run}·${a.shot}</span></button>
+        ${state.open === k ? `<div class="adetail">${esc(state.lang === "ko" ? a.message : t.msgs[a.rule.split("_")[0] === "defect" ? a.rule : a.rule.split("_")[0]] || "")}</div>` : ""}</li>`).join("");
+    document.getElementById("afoot").textContent = fmt(t["al.logs"], { n: logs });
+    document.querySelectorAll(".arow").forEach((b) => b.addEventListener("click", () => { const k = Number(b.dataset.k); state.open = state.open === k ? null : k; renderAlarms(); }));
+  }
+  function renderPlates() {
+    const t = L();
+    document.getElementById("plates").innerHTML = PLATES.map((v) => {
+      const p = profile(v), [, , unit, d] = VARS[v];
+      const chip = p.nowOut ? `<span class="chip out">${t["chip.out"]}</span>` : Math.abs(p.z) > 3 ? `<span class="chip warning">${ICON.warning}${t["chip.sig"]}</span>` : "";
+      const z = `${p.z >= 0 ? "+" : "−"}${Math.abs(p.z).toFixed(1)}σ`;
+      return `<button type="button" class="plate" data-v="${v}" aria-pressed="${state.v === v}">
+        <span class="nm"><span>${esc(vName(v))}</span><span>${unit}</span></span>
+        <span class="v"><b>${num(p.now, d)}</b><em>${z}</em>${chip}</span>
+        ${spark(p.xs.slice(-50), { w: 200, h: 24, color: css("--spark"), endColor: css("--ink") })}${sigmaBar(p)}</button>`;
+    }).join("");
+    document.querySelectorAll(".plate").forEach((b) => b.addEventListener("click", () => { state.v = b.dataset.v; renderPlates(); if (window.echarts) { drawImr(); drawDist(); } }));
+  }
+  function renderBars() {
+    const t = L(), counts = {}, tot = W.y.flat().reduce((s, y) => s + y, 0);
+    W.t.forEach((ts, k) => ts.forEach((ty, j) => { if (W.y[k][j]) counts[ty] = (counts[ty] || 0) + 1; }));
+    const rows = TYPES.filter((ty) => counts[ty]).sort((a, b) => counts[b] - counts[a]), mx = Math.max(...rows.map((r) => counts[r]));
+    document.getElementById("pareto").innerHTML = rows.map((ty) => `<div class="hb"><span>${t.types[ty]}</span><span class="track"><span class="fill" style="display:block;width:${(counts[ty] / mx) * 100}%;background:var(${TYPE_VAR[ty]})"></span></span><span>${counts[ty]} · ${pct(counts[ty] / tot, 0)}</span></div>`).join("");
+    const cav = [0, 1].map((j) => ({ n: W.y.reduce((s, p) => s + p[j], 0), r: Stats.mean(W.y.map((p) => p[j])) })), cm = Math.max(cav[0].r, cav[1].r);
+    document.getElementById("cavity").innerHTML = cav.map((c, j) => `<div class="hb"><span>${fmt(t.cav, { c: j + 1 })}</span><span class="track"><span class="fill" style="display:block;width:${(c.r / cm) * 100}%;background:var(--ink-2)"></span></span><span>${pct(c.r)} · ${c.n}</span></div>`).join("");
+  }
+
+  /* ---------- ECharts ---------- */
+  const charts = {};
+  const chart = (id) => (charts[id] ||= echarts.init(document.getElementById(id), null, { renderer: "canvas" }));
+  const base = () => ({
+    animation: false,
+    textStyle: { fontFamily: css("--font"), color: css("--ink-3"), fontSize: 11 },
+    tooltip: { trigger: "axis", backgroundColor: css("--ink"), borderWidth: 0, textStyle: { color: css("--surface"), fontSize: 12, fontFamily: css("--font") }, axisPointer: { type: "line", lineStyle: { color: css("--line-2") } } },
+  });
+  const axis = (extra = {}) => ({ axisLine: { lineStyle: { color: css("--line-2") } }, axisTick: { show: false }, axisLabel: { color: css("--ink-3"), fontSize: 11, hideOverlap: true }, splitLine: { show: false }, ...extra });
+  const vAxis = (extra = {}) => ({ type: "value", scale: true, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: css("--ink-3"), fontSize: 11 }, splitLine: { lineStyle: { color: css("--grid") } }, ...extra });
+  const refLine = (y, name, color, type = "solid") => ({ yAxis: y, lineStyle: { color, width: 1, type }, label: { formatter: name, position: "end", color: css("--ink-3"), fontSize: 10.5 } });
+
+  function drawP() {
+    const t = L(), g = D.pchart.groups, c = D.pchart.center, n = g[0].parts, se = Math.sqrt((c * (1 - c)) / n), ucl = c + 3 * se, lcl = Math.max(0, c - 3 * se);
+    const cats = g.map((x) => `${x.run}·${x.shot}`);
+    chart("c-p").setOption({
+      ...base(), grid: { left: 44, right: 64, top: 18, bottom: 26 },
+      tooltip: { ...base().tooltip, valueFormatter: (v) => pct(v) },
+      xAxis: axis({ type: "category", data: cats, boundaryGap: false }),
+      yAxis: vAxis({ scale: false, min: 0, max: Math.ceil((Math.max(ucl, ...g.map((x) => x.rate)) + 0.03) * 20) / 20, axisLabel: { color: css("--ink-3"), fontSize: 11, formatter: (v) => `${Math.round(v * 100)}%` } }),
+      series: [
+        { name: t.tt.rate, type: "line", data: g.map((x) => x.rate), lineStyle: { color: css("--ink"), width: 1.6 }, symbol: "circle", symbolSize: 5,
+          itemStyle: { color: (p) => (p.value > ucl ? css("--crit") : p.value < lcl ? css("--good") : css("--ink")) },
+          markLine: { silent: true, symbol: "none", data: [refLine(ucl, `UCL ${pct(ucl)}`, css("--ink-3")), refLine(c, `CL ${pct(c)}`, css("--ink-3"), "dashed"), refLine(lcl, `LCL ${pct(lcl)}`, css("--ink-3"))] } },
+      ],
+    }, true);
+  }
+  function drawImr() {
+    const t = L(), v = state.v, xs = W.x[v].slice(-100), k0 = N - 100, cats = xs.map((_, k) => lab(k0 + k)), d = VARS[v][3];
+    const mr = xs.map((x, k) => (k ? Math.abs(x - xs[k - 1]) : null)), mrbar = Stats.mean(mr.slice(1)), cl = Stats.mean(xs), sig = mrbar / 1.128 || Stats.sd(xs) || 1;
+    const ucl = cl + 3 * sig, lcl = cl - 3 * sig, mrU = 3.267 * mrbar;
+    const r1 = xs.map((x, k) => (x > ucl || x < lcl ? [k, x] : null)).filter(Boolean);
+    const r2 = []; let run = 0, side = 0;
+    xs.forEach((x, k) => { const s = Math.sign(x - cl); run = s && s === side ? run + 1 : s ? 1 : 0; side = s; if (run >= 9) r2.push([k, x]); });
+    document.getElementById("imr-title").textContent = fmt(t["imr.title"], { v: vName(v) });
+    const f = (x) => num(x, d);
+    chart("c-imr").setOption({
+      ...base(), axisPointer: { link: [{ xAxisIndex: "all" }] },
+      tooltip: { ...base().tooltip, valueFormatter: (x) => (x == null ? "–" : f(x)) },
+      grid: [{ left: 52, right: 74, top: 14, height: "58%" }, { left: 52, right: 74, top: "76%", bottom: 24 }],
+      xAxis: [axis({ type: "category", data: cats, axisLabel: { show: false }, gridIndex: 0 }), axis({ type: "category", data: cats, gridIndex: 1 })],
+      yAxis: [vAxis({ gridIndex: 0, min: Math.min(lcl, ...xs) - sig * 0.3, max: Math.max(ucl, ...xs) + sig * 0.3, axisLabel: { color: css("--ink-3"), fontSize: 11, formatter: (x) => f(x) } }),
+              vAxis({ gridIndex: 1, scale: false, min: 0, splitNumber: 2, axisLabel: { color: css("--ink-3"), fontSize: 10.5, formatter: (x) => f(x) } })],
+      series: [
+        { name: t.tt.value, type: "line", data: xs, xAxisIndex: 0, yAxisIndex: 0, symbol: "none", lineStyle: { color: css("--ink-2"), width: 1.3 },
+          markArea: { silent: true, data: [[{ yAxis: cl - sig, itemStyle: { color: css("--zone-1") } }, { yAxis: cl + sig }], [{ yAxis: cl + sig, itemStyle: { color: css("--zone-2") } }, { yAxis: cl + 2 * sig }], [{ yAxis: cl - 2 * sig, itemStyle: { color: css("--zone-2") } }, { yAxis: cl - sig }]] },
+          markLine: { silent: true, symbol: "none", data: [refLine(ucl, `UCL ${f(ucl)}`, css("--ink-3")), refLine(cl, `x̄ ${f(cl)}`, css("--ink-3"), "dashed"), refLine(lcl, `LCL ${f(lcl)}`, css("--ink-3"))] } },
+        { type: "scatter", data: r2, xAxisIndex: 0, yAxisIndex: 0, symbolSize: 6, itemStyle: { color: css("--warn") }, tooltip: { show: false } },
+        { type: "scatter", data: r1, xAxisIndex: 0, yAxisIndex: 0, symbol: "diamond", symbolSize: 9, itemStyle: { color: css("--crit"), borderColor: css("--surface"), borderWidth: 1.5 }, tooltip: { show: false } },
+        { name: t.tt.mr, type: "line", data: mr, xAxisIndex: 1, yAxisIndex: 1, symbol: "none", lineStyle: { color: css("--ink-3"), width: 1 },
+          markLine: { silent: true, symbol: "none", data: [refLine(mrU, `UCL ${f(mrU)}`, css("--ink-3"))] } },
+      ],
+    }, true);
+  }
+  function drawDist() {
+    const t = L(), v = state.v, p = profile(v), d = VARS[v][3], { bins, step } = Stats.bins(p.ref);
+    document.getElementById("dist-title").textContent = fmt(t["dist.title"], { v: vName(v) });
+    document.getElementById("lg-band").hidden = !p.r;
+    const s = p.s || step, lo = Math.min(p.m - 3.6 * s, ...p.ref, p.now) - step, hi = Math.max(p.m + 3.6 * s, ...p.ref, p.now) + step;
+    const curve = []; for (let k = 0; k <= 160; k++) { const x = lo + ((hi - lo) * k) / 160; curve.push([x, p.s > 0 ? Stats.pdf(x, p.m, p.s) * p.ref.length * step : 0]); }
+    const f = (x) => num(x, d), band = [];
+    if (p.r) band.push([{ xAxis: p.r.low ?? lo, itemStyle: { color: css("--band") } }, { xAxis: p.r.high ?? hi }]);
+    chart("c-dist").setOption({
+      ...base(), grid: { left: 36, right: 16, top: 26, bottom: 26 },
+      tooltip: { trigger: "item", backgroundColor: css("--ink"), borderWidth: 0, textStyle: { color: css("--surface"), fontSize: 12 },
+        formatter: (q) => (q.seriesIndex === 0 ? `${f((q.value[0] + q.value[1]) / 2)} ${VARS[v][2]}<br>${t.tt.count} ${q.value[2]}` : "") },
+      xAxis: { type: "value", min: lo, max: hi, axisLine: { lineStyle: { color: css("--line-2") } }, axisTick: { show: false }, splitLine: { show: false }, axisLabel: { color: css("--ink-3"), fontSize: 11, formatter: (x) => f(x), hideOverlap: true, showMinLabel: false, showMaxLabel: false } },
+      yAxis: vAxis({ scale: false, min: 0, splitNumber: 3 }),
+      series: [
+        { type: "custom", data: bins.map((b) => [b.a, b.b, b.c]), encode: { x: [0, 1], y: 2 },
+          renderItem: (_, api) => { const a = api.coord([api.value(0), 0]), b = api.coord([api.value(1), api.value(2)]);
+            return { type: "rect", shape: { x: a[0], y: b[1], width: Math.max(1.5, b[0] - a[0]), height: a[1] - b[1], r: [2, 2, 0, 0] }, style: { fill: css("--bar") } }; } },
+        { type: "line", data: curve, symbol: "none", smooth: true, lineStyle: { color: css("--ink"), width: 1.5 }, tooltip: { show: false }, silent: true,
+          markArea: { silent: true, data: band, label: { show: false } },
+          markLine: { silent: true, symbol: "none", data: [
+            { xAxis: p.m, lineStyle: { color: css("--ink-3"), width: 1, type: "solid" }, label: { formatter: "x̄", color: css("--ink-3"), fontSize: 10.5 } },
+            ...(p.s > 0 ? [-3, 3].map((k) => ({ xAxis: p.m + k * p.s, lineStyle: { color: css("--line-2"), width: 1, type: "solid" }, label: { formatter: `${k > 0 ? "+" : "−"}3σ`, color: css("--ink-3"), fontSize: 10.5 } })) : []),
+            { xAxis: p.now, lineStyle: { color: css("--accent-ink"), width: 2.2, type: "solid" }, label: { formatter: f(p.now), color: css("--accent-ink"), fontSize: 11, fontWeight: 700 } },
+          ] } },
+      ],
+    }, true);
+    const z = p.s > 0 ? `${p.z >= 0 ? "+" : "−"}${Math.abs(p.z).toFixed(2)}` : t["kv.none"];
+    document.getElementById("dist-kv").innerHTML = [[t["kv.now"], `${f(p.now)} ${VARS[v][2]}`], [t["kv.mean"], f(p.m)], [t["kv.sd"], num(p.s, d + 1)], [t["kv.z"], z], [t["kv.out"], p.out == null ? t["kv.none"] : pct(p.out, 0)]]
+      .map(([k, x]) => `<div><small>${k}</small><b>${x}</b></div>`).join("");
+  }
+
+  /* ---------- 전체 그리기 ---------- */
+  function renderAll() {
+    document.documentElement.lang = state.lang;
+    document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = L()[el.dataset.t] ?? ""; });
+    renderBar(); renderAndon(); renderStats(); renderAlarms(); renderPlates(); renderBars();
+    mountHelp(); helpText();
+    if (window.echarts) { drawP(); drawImr(); drawDist(); }
+  }
+  document.getElementById("lang-ko").addEventListener("click", () => { state.lang = "ko"; renderAll(); });
+  document.getElementById("lang-en").addEventListener("click", () => { state.lang = "en"; renderAll(); });
+  document.getElementById("th-light").addEventListener("click", () => { document.documentElement.dataset.theme = "light"; renderAll(); });
+  document.getElementById("th-dark").addEventListener("click", () => { document.documentElement.dataset.theme = "dark"; renderAll(); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderAll);
+  new ResizeObserver(() => Object.values(charts).forEach((c) => c.resize())).observe(document.getElementById("app"));
+  renderAll();
+  if (document.fonts && window.echarts) document.fonts.ready.then(() => { drawP(); drawImr(); drawDist(); });
+})();
+</script>
+</html>

@@ -1,0 +1,3 @@
+Product_Type,parts,defect_rate,mean_p_defect,cv_roc_auc
+1,5306,0.116472,0.116762,0.750907
+2,3928,0.13391,0.133866,0.758234

@@ -1,0 +1,8 @@
+node_modules/
+.next/
+next-env.d.ts
+# scripts/build-tokens.mjs가 docs/design/tokens.json에서 만든다
+src/styles/tokens.css
+src/styles/tokens.json
+# next dev가 자동으로 만드는 AI 도구용 안내 파일
+AGENTS.md
